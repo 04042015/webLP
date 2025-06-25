@@ -12,10 +12,7 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // Disable server features untuk static export
-  experimental: {
-    appDir: true
-  }
+  // Remove experimental.appDir - tidak diperlukan di Next.js 15
 }
 
 export default nextConfig
