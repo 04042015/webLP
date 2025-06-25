@@ -1,0 +1,23 @@
+[build]
+  publish = "out"
+  command = "npm run netlify-build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
+
+# Redirect semua routes ke index.html untuk SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables untuk production
+[context.production.environment]
+  NEXT_PUBLIC_ADMIN_PASSWORD = "admin123"
+  NEXT_PUBLIC_SUPABASE_URL = ""
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = ""
+
+# Environment variables untuk preview
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_ADMIN_PASSWORD = "admin123"
