@@ -1,16 +1,16 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CustomButton } from "@/components/ui/custom-button"
-import { BarChart3, Users, FileText, Eye, Plus, Edit, Trash2, Search, Filter } from "lucide-react"
+import { BarChart3, Users, FileText, Eye, Plus, Edit, Trash2, Search } from "lucide-react"
 import { articleService, localStorageService, type Article } from "@/lib/supabase"
 import Link from "next/link"
-
-// Tambahkan import di bagian atas
 import { useAuth } from "@/components/auth/admin-auth"
 
 const stats = [
@@ -47,21 +47,21 @@ const stats = [
 export default function AdminPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "dashboard")
+  const [activeTab, setActiveTab] = useState(searchParams?.get("tab") || "dashboard")
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("")
   const [statusFilter, setStatusFilter] = useState("")
+  const [editingArticle, setEditingArticle] = useState<Article | null>(null)
+  const [showEditor, setShowEditor] = useState(false)
 
-  // Di dalam component AdminPage, tambahkan:
   const { logout } = useAuth()
 
   // Load articles
   useEffect(() => {
     const loadArticles = async () => {
       try {
-        // Try Supabase first, fallback to localStorage
         try {
           const articlesData = await articleService.getArticles()
           setArticles(articlesData)
@@ -104,7 +104,6 @@ export default function AdminPage() {
     if (!confirm("Apakah Anda yakin ingin menghapus artikel ini?")) return
 
     try {
-      // Try Supabase first, fallback to localStorage
       try {
         await articleService.deleteArticle(id)
       } catch (supabaseError) {
@@ -120,13 +119,195 @@ export default function AdminPage() {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
-    router.push(`/admin?tab=${tab}`)
+    if (typeof window !== "undefined") {
+      window.history.pushState({}, "", `/admin?tab=${tab}`)
+    }
+  }
+
+  const handleEditArticle = (article: Article) => {
+    setEditingArticle(article)
+    setShowEditor(true)
+  }
+
+  const handleNewArticle = () => {
+    setEditingArticle(null)
+    setShowEditor(true)
+  }
+
+  // Simple inline editor component
+  const ArticleEditor = ({
+    article,
+    onSave,
+    onCancel,
+  }: {
+    article?: Article | null
+    onSave: (article: Article) => void
+    onCancel: () => void
+  }) => {
+    const [formData, setFormData] = useState({
+      title: article?.title || "",
+      slug: article?.slug || "",
+      excerpt: article?.excerpt || "",
+      content: article?.content || "",
+      category: article?.category || "Teknologi",
+      author: article?.author || "Admin",
+      status: article?.status || ("draft" as "draft" | "review" | "published"),
+      featured: article?.featured || false,
+      image_url: article?.image_url || "",
+    })
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault()
+
+      try {
+        let savedArticle: Article
+
+        if (article) {
+          savedArticle = await articleService.updateArticle(article.id, formData)
+        } else {
+          savedArticle = await articleService.createArticle(formData)
+        }
+
+        onSave(savedArticle)
+      } catch (error) {
+        console.error("Error saving article:", error)
+        alert("Gagal menyimpan artikel")
+      }
+    }
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">{article ? "Edit Artikel" : "Artikel Baru"}</h2>
+              <Button variant="ghost" onClick={onCancel}>
+                ✕
+              </Button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Judul</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+                  className="w-full p-2 border rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Slug</label>
+                <input
+                  type="text"
+                  value={formData.slug}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
+                  className="w-full p-2 border rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Ringkasan</label>
+                <textarea
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, excerpt: e.target.value }))}
+                  className="w-full p-2 border rounded"
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Konten</label>
+                <textarea
+                  value={formData.content}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
+                  className="w-full p-2 border rounded"
+                  rows={10}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Kategori</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="Teknologi">Teknologi</option>
+                    <option value="Keuangan">Keuangan</option>
+                    <option value="Zodiak">Zodiak</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Berita">Berita</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Status</label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, status: e.target.value as any }))}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="review">Review</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={formData.featured}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, featured: e.target.checked }))}
+                />
+                <label className="text-sm font-medium">Artikel Unggulan</label>
+              </div>
+
+              <div className="flex space-x-4">
+                <CustomButton type="submit" variant="gradient">
+                  {article ? "Update" : "Simpan"}
+                </CustomButton>
+                <Button type="button" variant="outline" onClick={onCancel}>
+                  Batal
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (showEditor) {
+    return (
+      <ArticleEditor
+        article={editingArticle}
+        onSave={(savedArticle) => {
+          if (editingArticle) {
+            setArticles((prev) => prev.map((a) => (a.id === savedArticle.id ? savedArticle : a)))
+          } else {
+            setArticles((prev) => [savedArticle, ...prev])
+          }
+          setShowEditor(false)
+          setEditingArticle(null)
+        }}
+        onCancel={() => {
+          setShowEditor(false)
+          setEditingArticle(null)
+        }}
+      />
+    )
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      {/* Update header admin dengan tombol logout: */}
       <header className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -172,22 +353,6 @@ export default function AdminPage() {
                   >
                     <FileText className="h-4 w-4 mr-2" />
                     Artikel
-                  </Button>
-                  <Button
-                    variant={activeTab === "categories" ? "default" : "ghost"}
-                    className="w-full justify-start"
-                    onClick={() => handleTabChange("categories")}
-                  >
-                    <Filter className="h-4 w-4 mr-2" />
-                    Kategori
-                  </Button>
-                  <Button
-                    variant={activeTab === "users" ? "default" : "ghost"}
-                    className="w-full justify-start"
-                    onClick={() => handleTabChange("users")}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    Pengguna
                   </Button>
                 </nav>
               </CardContent>
@@ -236,12 +401,10 @@ export default function AdminPage() {
                       <div className="text-center py-8">
                         <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                         <p className="text-gray-600 mb-4">Belum ada artikel</p>
-                        <Link href="/admin/artikel/baru">
-                          <CustomButton variant="gradient">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Buat Artikel Pertama
-                          </CustomButton>
-                        </Link>
+                        <CustomButton variant="gradient" onClick={handleNewArticle}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Buat Artikel Pertama
+                        </CustomButton>
                       </div>
                     ) : (
                       <div className="space-y-4">
@@ -267,11 +430,9 @@ export default function AdminPage() {
                               >
                                 {article.status}
                               </Badge>
-                              <Link href={`/admin/artikel/${article.id}/edit`}>
-                                <Button variant="ghost" size="sm">
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                              </Link>
+                              <Button variant="ghost" size="sm" onClick={() => handleEditArticle(article)}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
                             </div>
                           </div>
                         ))}
@@ -289,12 +450,10 @@ export default function AdminPage() {
                     <h1 className="text-3xl font-bold mb-2">Kelola Artikel</h1>
                     <p className="text-gray-600">Buat, edit, dan kelola semua artikel</p>
                   </div>
-                  <Link href="/admin/artikel/baru">
-                    <CustomButton variant="gradient">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Artikel Baru
-                    </CustomButton>
-                  </Link>
+                  <CustomButton variant="gradient" onClick={handleNewArticle}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Artikel Baru
+                  </CustomButton>
                 </div>
 
                 {/* Search and Filter */}
@@ -406,20 +565,9 @@ export default function AdminPage() {
                                 </td>
                                 <td className="px-6 py-4">
                                   <div className="flex space-x-2">
-                                    {article.status === "published" && (
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => window.open(`/artikel/${article.slug}`, "_blank")}
-                                      >
-                                        <Eye className="h-4 w-4" />
-                                      </Button>
-                                    )}
-                                    <Link href={`/admin/artikel/${article.id}/edit`}>
-                                      <Button variant="ghost" size="sm">
-                                        <Edit className="h-4 w-4" />
-                                      </Button>
-                                    </Link>
+                                    <Button variant="ghost" size="sm" onClick={() => handleEditArticle(article)}>
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
                                     <Button
                                       variant="ghost"
                                       size="sm"
@@ -438,21 +586,6 @@ export default function AdminPage() {
                     )}
                   </CardContent>
                 </Card>
-              </div>
-            )}
-
-            {/* Other tabs can be implemented similarly */}
-            {activeTab === "categories" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-4">Kelola Kategori</h2>
-                <p className="text-gray-600">Fitur ini akan segera tersedia</p>
-              </div>
-            )}
-
-            {activeTab === "users" && (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-bold mb-4">Kelola Pengguna</h2>
-                <p className="text-gray-600">Fitur ini akan segera tersedia</p>
               </div>
             )}
           </div>
