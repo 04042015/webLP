@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Konfigurasi untuk Netlify - Static Export
+  // NUCLEAR OPTION: Complete static export without dynamic routes
   output: 'export',
   trailingSlash: true,
   eslint: {
@@ -12,7 +12,20 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  // Remove experimental.appDir - tidak diperlukan di Next.js 15
+  // EXCLUDE all dynamic routes from static export
+  exportPathMap: async function (defaultPathMap) {
+    return {
+      '/': { page: '/' },
+      '/artikel': { page: '/artikel' },
+      '/zodiak': { page: '/zodiak' },
+      '/tentang': { page: '/tentang' },
+      '/kontak': { page: '/kontak' },
+      '/kategori': { page: '/kategori' },
+      '/demo': { page: '/demo' },
+      '/admin': { page: '/admin' },
+      // NO dynamic routes - they'll be handled client-side
+    }
+  }
 }
 
 export default nextConfig
