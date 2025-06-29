@@ -5,7 +5,6 @@ import { Calendar, User, ChevronDown, Search } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { CustomButton } from "@/components/ui/custom-button"
-
 // Tambahkan import
 import { AdminAccess } from "@/components/ui/admin-access"
 
@@ -26,7 +25,7 @@ const featuredArticles = [
     id: 2,
     title: "Tips Investasi untuk Pemula di Era Digital",
     excerpt: "Panduan lengkap untuk memulai investasi dengan aman dan menguntungkan di era digital ini.",
-    category: "Keuangan",
+    category: "Ekonomi",
     author: "Editor",
     date: "2024-01-14",
     image: "/placeholder.svg?height=300&width=500",
@@ -42,12 +41,21 @@ const featuredArticles = [
   },
 ]
 
+// UPDATE: 13 Kategori Baru
 const categories = [
-  { name: "Teknologi", count: 25, color: "bg-langsapost-500" },
-  { name: "Keuangan", count: 18, color: "bg-green-500" },
-  { name: "Zodiak", count: 32, color: "bg-purple-500" },
-  { name: "Lifestyle", count: 15, color: "bg-pink-500" },
-  { name: "Berita", count: 42, color: "bg-langsapost-600" },
+  { name: "Politik", count: 28, color: "bg-red-500", slug: "politik" },
+  { name: "Ekonomi", count: 24, color: "bg-green-500", slug: "ekonomi" },
+  { name: "Olahraga", count: 35, color: "bg-blue-500", slug: "olahraga" },
+  { name: "Teknologi", count: 25, color: "bg-purple-500", slug: "teknologi" },
+  { name: "Internasional", count: 22, color: "bg-indigo-500", slug: "internasional" },
+  { name: "Nasional", count: 31, color: "bg-red-600", slug: "nasional" },
+  { name: "Hiburan", count: 18, color: "bg-pink-500", slug: "hiburan" },
+  { name: "Kesehatan", count: 20, color: "bg-emerald-500", slug: "kesehatan" },
+  { name: "Pendidikan", count: 16, color: "bg-yellow-500", slug: "pendidikan" },
+  { name: "Otomotif", count: 12, color: "bg-gray-500", slug: "otomotif" },
+  { name: "Langsa", count: 45, color: "bg-orange-500", slug: "langsa" },
+  { name: "Loker", count: 14, color: "bg-cyan-500", slug: "loker" },
+  { name: "Zodiak", count: 32, color: "bg-violet-500", slug: "zodiak" },
 ]
 
 export default function HomePage() {
@@ -70,7 +78,6 @@ export default function HomePage() {
                 />
               </div>
             </Link>
-
             {/* Login Button - Hidden by default */}
             {(process.env.NODE_ENV === "development" ||
               (typeof window !== "undefined" && window.location.search.includes("admin=true"))) && (
@@ -99,43 +106,49 @@ export default function HomePage() {
                   Artikel
                 </Link>
 
-                {/* Kategori - Tampilkan Semua */}
+                {/* UPDATE: Kategori Baru - Tampilkan 6 Kategori Utama */}
                 <div className="flex items-center gap-4">
                   <span className="text-gray-500 font-medium text-sm">Kategori:</span>
                   <Link
-                    href="/kategori/teknologi"
-                    className="flex items-center text-gray-700 hover:text-langsapost-500 transition-colors font-medium"
+                    href="/kategori/politik"
+                    className="flex items-center text-gray-700 hover:text-red-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-langsapost-500 rounded-full mr-2"></span>
-                    Teknologi
+                    <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                    Politik
                   </Link>
                   <Link
-                    href="/kategori/keuangan"
+                    href="/kategori/ekonomi"
                     className="flex items-center text-gray-700 hover:text-green-600 transition-colors font-medium"
                   >
                     <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    Keuangan
+                    Ekonomi
                   </Link>
                   <Link
-                    href="/zodiak"
+                    href="/kategori/olahraga"
+                    className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                  >
+                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    Olahraga
+                  </Link>
+                  <Link
+                    href="/kategori/teknologi"
                     className="flex items-center text-gray-700 hover:text-purple-600 transition-colors font-medium"
                   >
                     <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                    Zodiak
+                    Teknologi
                   </Link>
                   <Link
-                    href="/kategori/lifestyle"
-                    className="flex items-center text-gray-700 hover:text-pink-600 transition-colors font-medium"
+                    href="/kategori/langsa"
+                    className="flex items-center text-gray-700 hover:text-orange-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-pink-500 rounded-full mr-2"></span>
-                    Lifestyle
+                    <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                    Langsa
                   </Link>
                   <Link
-                    href="/kategori/berita"
-                    className="flex items-center text-gray-700 hover:text-langsapost-600 transition-colors font-medium"
+                    href="/kategori"
+                    className="text-langsapost-500 hover:text-langsapost-600 font-medium transition-colors"
                   >
-                    <span className="w-2 h-2 bg-langsapost-600 rounded-full mr-2"></span>
-                    Berita
+                    Lihat Semua →
                   </Link>
                 </div>
 
@@ -267,23 +280,29 @@ export default function HomePage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Categories */}
+            {/* UPDATE: Categories - Semua 13 Kategori */}
             <Card>
               <CardHeader>
-                <CardTitle>Kategori</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  Kategori
+                  <Link href="/kategori" className="text-sm text-langsapost-500 hover:text-langsapost-600">
+                    Lihat Semua
+                  </Link>
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {categories.map((category) => (
-                  <div
+                  <Link
                     key={category.name}
-                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    href={`/kategori/${category.slug}`}
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
                   >
                     <div className="flex items-center space-x-3">
                       <div className={`w-3 h-3 rounded-full ${category.color}`} />
-                      <span className="font-medium">{category.name}</span>
+                      <span className="font-medium hover:text-langsapost-600">{category.name}</span>
                     </div>
                     <Badge variant="secondary">{category.count}</Badge>
-                  </div>
+                  </Link>
                 ))}
               </CardContent>
             </Card>
@@ -351,26 +370,31 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Kategori</h4>
+              <h4 className="font-semibold mb-4">Kategori Utama</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <Link href="/teknologi" className="hover:text-white">
+                  <Link href="/kategori/politik" className="hover:text-white">
+                    Politik
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/kategori/ekonomi" className="hover:text-white">
+                    Ekonomi
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/kategori/olahraga" className="hover:text-white">
+                    Olahraga
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/kategori/teknologi" className="hover:text-white">
                     Teknologi
                   </Link>
                 </li>
                 <li>
-                  <Link href="/keuangan" className="hover:text-white">
-                    Keuangan
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/zodiak" className="hover:text-white">
-                    Zodiak
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/lifestyle" className="hover:text-white">
-                    Lifestyle
+                  <Link href="/kategori/langsa" className="hover:text-white">
+                    Langsa
                   </Link>
                 </li>
               </ul>
@@ -432,6 +456,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
       {/* Secret Admin Access */}
       <AdminAccess />
     </div>
