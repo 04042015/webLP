@@ -1,13 +1,11 @@
 "use client"
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CustomButton } from "@/components/ui/custom-button"
-import { Calendar, User, ChevronDown, Search } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Calendar, User } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-// Daftar kategori
 const categories = [
   { name: "Politik", slug: "politik" },
   { name: "Ekonomi", slug: "ekonomi" },
@@ -24,7 +22,6 @@ const categories = [
   { name: "Zodiak", slug: "zodiak" },
 ]
 
-// Artikel contoh
 const articles = [
   {
     id: 1,
@@ -65,7 +62,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Horizontal Category Scroll */}
+        {/* Horizontal Kategori ala Kompas */}
         <div className="overflow-x-auto whitespace-nowrap border-t border-gray-200">
           <div className="flex space-x-4 px-4 py-2">
             {categories.map((cat) => (
@@ -86,7 +83,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Artikel */}
       <main className="container mx-auto px-4 py-6 space-y-6">
         {articles.map((article) => (
           <Card key={article.id} className="overflow-hidden">
@@ -111,6 +108,61 @@ export default function HomePage() {
           </Card>
         ))}
       </main>
+
+      {/* Footer Profesional */}
+      <footer className="bg-gray-900 text-white py-12 mt-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-8 h-6 relative">
+                  <Image
+                    src="/assets/logo.png"
+                    alt="LangsaPost Logo"
+                    fill
+                    className="object-contain brightness-0 invert"
+                  />
+                </div>
+              </div>
+              <p className="text-gray-400">
+                Portal berita terpercaya dengan informasi terkini dan akurat untuk masyarakat Indonesia.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Kategori Utama</h4>
+              <ul className="space-y-2 text-gray-400">
+                {categories.slice(0, 5).map((cat) => (
+                  <li key={cat.slug}>
+                    <Link href={`/kategori/${cat.slug}`} className="hover:text-white">
+                      {cat.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Tentang</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link href="/tentang" className="hover:text-white">Tentang Kami</Link></li>
+                <li><Link href="/kontak" className="hover:text-white">Kontak</Link></li>
+                <li><Link href="/kebijakan" className="hover:text-white">Kebijakan Privasi</Link></li>
+                <li><Link href="/syarat" className="hover:text-white">Syarat & Ketentuan</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Ikuti Kami</h4>
+              <div className="flex space-x-4">
+                <button className="bg-transparent border border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-3 py-1 rounded-full">📘</button>
+                <button className="bg-transparent border border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-3 py-1 rounded-full">🐦</button>
+                <button className="bg-transparent border border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-3 py-1 rounded-full">📷</button>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 LangsaPost. Semua hak dilindungi.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
-}
+  }
