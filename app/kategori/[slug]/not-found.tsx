@@ -13,6 +13,7 @@ const AVAILABLE_CATEGORIES = [
   { slug: "otomotif", name: "Otomotif" },
   { slug: "langsa", name: "Langsa" },
   { slug: "loker", name: "Loker" },
+  { slug: "zodiak", name: "Zodiak" },
 ]
 
 export default function CategoryNotFound() {
