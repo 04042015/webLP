@@ -4,8 +4,8 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Semua Kategori Berita - LangsaPost",
   description:
-    "Jelajahi semua kategori berita di LangsaPost - Politik, Ekonomi, Olahraga, Teknologi, Loker, dan kategori khusus Langsa",
-  keywords: "kategori berita, LangsaPost, berita Langsa, politik, ekonomi, olahraga, teknologi, loker",
+    "Jelajahi semua kategori berita di LangsaPost - Politik, Ekonomi, Olahraga, Teknologi, Loker, Zodiak, dan kategori khusus Langsa",
+  keywords: "kategori berita, LangsaPost, berita Langsa, politik, ekonomi, olahraga, teknologi, loker, zodiak",
 }
 
 const CATEGORIES = [
@@ -69,6 +69,11 @@ const CATEGORIES = [
     name: "Loker",
     description: "Informasi lowongan kerja dan peluang karir terbaru",
   },
+  {
+    slug: "zodiak",
+    name: "Zodiak",
+    description: "Ramalan zodiak harian dan informasi astrologi",
+  },
 ]
 
 export default function CategoriesPage() {
@@ -78,7 +83,7 @@ export default function CategoriesPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Semua Kategori Berita</h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Jelajahi berita berdasarkan kategori yang Anda minati. Dari politik hingga lowongan kerja, temukan informasi
+          Jelajahi berita berdasarkan kategori yang Anda minati. Dari politik hingga ramalan zodiak, temukan informasi
           terkini yang relevan dengan minat dan kebutuhan Anda.
         </p>
       </div>
