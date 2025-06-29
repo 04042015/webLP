@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 
-// Data kategori untuk LangsaPost (dengan tambahan Loker)
+// Data kategori untuk LangsaPost (dengan tambahan Zodiak)
 const CATEGORIES = {
   politik: {
     name: "Politik",
@@ -50,6 +50,10 @@ const CATEGORIES = {
   loker: {
     name: "Loker",
     description: "Informasi lowongan kerja dan peluang karir terbaru",
+  },
+  zodiak: {
+    name: "Zodiak",
+    description: "Ramalan zodiak harian dan informasi astrologi",
   },
 }
 
@@ -112,28 +116,28 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
       {/* Daftar Artikel */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Placeholder artikel */}
+        {/* Placeholder artikel dengan konten yang disesuaikan per kategori */}
         <ArticleCard
-          title={`${category.name === "Loker" ? "Lowongan Kerja" : "Berita"} ${category.name} Terbaru Hari Ini`}
-          excerpt={`${category.name === "Loker" ? "Temukan peluang karir terbaru" : "Simak perkembangan terbaru"} di bidang ${category.name.toLowerCase()} yang perlu Anda ketahui...`}
+          title={getArticleTitle(category.name, 1)}
+          excerpt={getArticleExcerpt(category.name, 1)}
           category={category.name}
-          slug="berita-terbaru-1"
+          slug="artikel-terbaru-1"
           date="2024-01-15"
           author="Tim Redaksi"
         />
         <ArticleCard
-          title={`Update ${category.name}: Informasi Penting`}
-          excerpt={`Informasi penting seputar ${category.name.toLowerCase()} yang ${category.name === "Loker" ? "dapat membantu karir Anda" : "berdampak pada masyarakat"}...`}
+          title={getArticleTitle(category.name, 2)}
+          excerpt={getArticleExcerpt(category.name, 2)}
           category={category.name}
-          slug="update-penting-2"
+          slug="artikel-update-2"
           date="2024-01-14"
           author="Reporter LangsaPost"
         />
         <ArticleCard
-          title={`${category.name === "Loker" ? "Tips Karir" : "Analisis Mendalam"}: ${category.name}`}
-          excerpt={`${category.name === "Loker" ? "Tips dan panduan untuk meningkatkan peluang karir" : "Analisis mendalam tentang situasi terkini"} di bidang ${category.name.toLowerCase()}...`}
+          title={getArticleTitle(category.name, 3)}
+          excerpt={getArticleExcerpt(category.name, 3)}
           category={category.name}
-          slug="analisis-mendalam-3"
+          slug="artikel-analisis-3"
           date="2024-01-13"
           author="Analis Senior"
         />
@@ -156,6 +160,50 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </div>
     </div>
   )
+}
+
+// Fungsi untuk generate judul artikel sesuai kategori
+function getArticleTitle(category: string, index: number): string {
+  switch (category) {
+    case "Loker":
+      return index === 1
+        ? "Lowongan Kerja Terbaru Hari Ini"
+        : index === 2
+          ? "Update Loker: Peluang Karir Menarik"
+          : "Tips Karir: Panduan Sukses Berkarir"
+    case "Zodiak":
+      return index === 1
+        ? "Ramalan Zodiak Hari Ini"
+        : index === 2
+          ? "Update Zodiak: Prediksi Mingguan"
+          : "Analisis Astrologi: Pengaruh Bintang"
+    default:
+      return index === 1
+        ? `Berita ${category} Terbaru Hari Ini`
+        : index === 2
+          ? `Update ${category}: Informasi Penting`
+          : `Analisis Mendalam: ${category}`
+  }
+}
+
+// Fungsi untuk generate excerpt artikel sesuai kategori
+function getArticleExcerpt(category: string, index: number): string {
+  switch (category) {
+    case "Loker":
+      return index === 1
+        ? "Temukan peluang karir terbaru dan lowongan kerja yang sesuai dengan keahlian Anda..."
+        : index === 2
+          ? "Informasi penting seputar dunia kerja yang dapat membantu mengembangkan karir Anda..."
+          : "Tips dan panduan praktis untuk meningkatkan peluang sukses dalam berkarir..."
+    case "Zodiak":
+      return index === 1
+        ? "Simak ramalan bintang hari ini untuk semua zodiak dan temukan prediksi keberuntungan Anda..."
+        : index === 2
+          ? "Update prediksi zodiak mingguan dengan analisis mendalam tentang pengaruh planet..."
+          : "Analisis astrologi komprehensif tentang pengaruh pergerakan bintang terhadap kehidupan..."
+    default:
+      return `Simak perkembangan terbaru di bidang ${category.toLowerCase()} yang perlu Anda ketahui dan pahami...`
+  }
 }
 
 // Komponen untuk card artikel - style sederhana
