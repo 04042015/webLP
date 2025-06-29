@@ -5,7 +5,6 @@ import { Calendar, User, ChevronDown, Search } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { CustomButton } from "@/components/ui/custom-button"
-// Tambahkan import
 import { AdminAccess } from "@/components/ui/admin-access"
 
 // Sample data - in production, this would come from a CMS or database
@@ -111,38 +110,45 @@ export default function HomePage() {
                   <span className="text-gray-500 font-medium text-sm">Kategori:</span>
                   <Link
                     href="/kategori/politik"
-                    className="flex items-center text-gray-700 hover:text-red-600 transition-colors font-medium"
+                    className="text-gray-700 hover:text-red-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
                     Politik
                   </Link>
                   <Link
                     href="/kategori/ekonomi"
-                    className="flex items-center text-gray-700 hover:text-green-600 transition-colors font-medium"
+                    className="text-gray-700 hover:text-green-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                     Ekonomi
                   </Link>
                   <Link
                     href="/kategori/olahraga"
-                    className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                    className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
                     Olahraga
                   </Link>
                   <Link
                     href="/kategori/teknologi"
-                    className="flex items-center text-gray-700 hover:text-purple-600 transition-colors font-medium"
+                    className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
                     Teknologi
                   </Link>
                   <Link
                     href="/kategori/langsa"
-                    className="flex items-center text-gray-700 hover:text-orange-600 transition-colors font-medium"
+                    className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
                   >
-                    <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
                     Langsa
+                  </Link>
+                  <Link
+                    href="/kategori/loker"
+                    className="text-gray-700 hover:text-cyan-600 transition-colors font-medium"
+                  >
+                    Loker
+                  </Link>
+                  <Link
+                    href="/kategori/zodiak"
+                    className="text-gray-700 hover:text-violet-600 transition-colors font-medium"
+                  >
+                    Zodiak
                   </Link>
                   <Link
                     href="/kategori"
