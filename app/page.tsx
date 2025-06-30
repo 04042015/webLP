@@ -1,4 +1,5 @@
-"use client" 
+"use client"
+
 import { useState } from "react" import { Badge } from "@/components/ui/badge" import { Card, CardContent } from "@/components/ui/card" import { Calendar, User } from "lucide-react" import Image from "next/image" import Link from "next/link" import zodiacData from "./data/zodiak.json"
 
 const categories = [ { name: "Politik", slug: "politik" }, { name: "Ekonomi", slug: "ekonomi" }, { name: "Olahraga", slug: "olahraga" }, { name: "Teknologi", slug: "teknologi" }, { name: "Internasional", slug: "internasional" }, { name: "Nasional", slug: "nasional" }, { name: "Hiburan", slug: "hiburan" }, { name: "Kesehatan", slug: "kesehatan" }, { name: "Pendidikan", slug: "pendidikan" }, { name: "Otomotif", slug: "otomotif" }, { name: "Langsa", slug: "langsa" }, { name: "Loker", slug: "loker" }, { name: "Zodiak", slug: "zodiak" }, ]
@@ -54,37 +55,6 @@ return ( <div className="min-h-screen bg-white text-black"> {/* Header */} <head
         </CardContent>
       </Card>
     ))}
-
-    {/* Zodiak Hari Ini */}
-    <div className="mt-16">
-      <h2 className="text-2xl font-bold mb-6 text-langsapost-600">Zodiak Hari Ini</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {zodiacData.slice(0, 3).map((sign) => (
-          <Link
-            key={sign.slug}
-            href={`/zodiak/${sign.slug}`}
-            className="p-4 bg-white border rounded-lg hover:shadow transition duration-300"
-          >
-            <div className="flex items-center space-x-4 mb-2">
-              <div className="text-4xl">{sign.icon}</div>
-              <div>
-                <h3 className="font-semibold text-lg text-gray-800">{sign.name}</h3>
-                <p className="text-sm text-gray-500">{sign.date}</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 line-clamp-3">{sign.prediction}</p>
-          </Link>
-        ))}
-      </div>
-      <div className="mt-6 text-right">
-        <Link
-          href="/zodiak"
-          className="text-langsapost-500 hover:text-langsapost-600 font-medium transition-colors"
-        >
-          Lihat Semua Zodiak →
-        </Link>
-      </div>
-    </div>
   </main>
 
   {/* Footer Profesional */}
