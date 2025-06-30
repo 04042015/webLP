@@ -43,6 +43,19 @@ const articles = [
     }, 
 ]
 
+function getDailyZodiacs() {
+  const today = new Date().toISOString().slice(0, 10) // format: "2025-06-29"
+  const seed = parseInt(today.replace(/-/g, ""), 10)
+
+  const shuffled = [...zodiacData].sort((a, b) => {
+    const hashA = (a.name.charCodeAt(0) * seed) % 100
+    const hashB = (b.name.charCodeAt(0) * seed) % 100
+    return hashA - hashB
+  })
+
+  return shuffled.slice(0, 3)
+        }
+
 export default function HomePage() {
     const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
@@ -105,6 +118,33 @@ export default function HomePage() {
           <p className="text-gray-600 text-sm">{article.excerpt}</p>
         </CardContent>
       </Card>
+        <section className="py-8">
+  <h2 className="text-xl font-bold mb-4 text-langsapost-600">Ramalan Zodiak Hari Ini</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    {dailyZodiacs.map((zodiak) => (
+      <Card key={zodiak.slug}>
+        <CardContent className="p-4 space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">{zodiak.icon}</span>
+            <div>
+              <Link href={`/zodiak/${zodiak.slug}`} className="text-lg font-semibold hover:text-langsapost-600">
+                {zodiak.name}
+              </Link>
+              <div className="text-xs text-gray-500">{zodiak.date}</div>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600">{zodiak.prediction.slice(0, 100)}...</p>
+          <Link
+            href={`/zodiak/${zodiak.slug}`}
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Baca Selengkapnya →
+          </Link>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+</section>
     ))}
   </main>
 
