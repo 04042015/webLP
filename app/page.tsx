@@ -1,4 +1,5 @@
-"use client" import { useState } from "react" import { Badge } from "@/components/ui/badge" import { Card, CardContent } from "@/components/ui/card" import { Calendar, User } from "lucide-react" import Image from "next/image" import Link from "next/link" import zodiacData from "./data/zodiak.json"
+"use client" 
+import { useState } from "react" import { Badge } from "@/components/ui/badge" import { Card, CardContent } from "@/components/ui/card" import { Calendar, User } from "lucide-react" import Image from "next/image" import Link from "next/link" import zodiacData from "./data/zodiak.json"
 
 const categories = [ { name: "Politik", slug: "politik" }, { name: "Ekonomi", slug: "ekonomi" }, { name: "Olahraga", slug: "olahraga" }, { name: "Teknologi", slug: "teknologi" }, { name: "Internasional", slug: "internasional" }, { name: "Nasional", slug: "nasional" }, { name: "Hiburan", slug: "hiburan" }, { name: "Kesehatan", slug: "kesehatan" }, { name: "Pendidikan", slug: "pendidikan" }, { name: "Otomotif", slug: "otomotif" }, { name: "Langsa", slug: "langsa" }, { name: "Loker", slug: "loker" }, { name: "Zodiak", slug: "zodiak" }, ]
 
