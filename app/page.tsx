@@ -1,14 +1,64 @@
 "use client"
 
-import { useState } from "react" import { Badge } from "@/components/ui/badge" import { Card, CardContent } from "@/components/ui/card" import { Calendar, User } from "lucide-react" import Image from "next/image" import Link from "next/link" import zodiacData from "./data/zodiak.json"
+import { useState } from "react" import { Badge } from "@/components/ui/badge" 
+import { Card, CardContent } from "@/components/ui/card" 
+import { Calendar, User } from "lucide-react" 
+import Image from "next/image" 
+import Link from "next/link" 
+import zodiacData from "./data/zodiak.json"
 
-const categories = [ { name: "Politik", slug: "politik" }, { name: "Ekonomi", slug: "ekonomi" }, { name: "Olahraga", slug: "olahraga" }, { name: "Teknologi", slug: "teknologi" }, { name: "Internasional", slug: "internasional" }, { name: "Nasional", slug: "nasional" }, { name: "Hiburan", slug: "hiburan" }, { name: "Kesehatan", slug: "kesehatan" }, { name: "Pendidikan", slug: "pendidikan" }, { name: "Otomotif", slug: "otomotif" }, { name: "Langsa", slug: "langsa" }, { name: "Loker", slug: "loker" }, { name: "Zodiak", slug: "zodiak" }, ]
+const categories = [ 
+    { name: "Politik", slug: "politik" }, 
+    { name: "Ekonomi", slug: "ekonomi" }, 
+    { name: "Olahraga", slug: "olahraga" }, 
+    { name: "Teknologi", slug: "teknologi" }, 
+    { name: "Internasional", slug: "internasional" }, 
+    { name: "Nasional", slug: "nasional" }, 
+    { name: "Hiburan", slug: "hiburan" }, 
+    { name: "Kesehatan", slug: "kesehatan" }, 
+    { name: "Pendidikan", slug: "pendidikan" }, 
+    { name: "Otomotif", slug: "otomotif" }, 
+    { name: "Langsa", slug: "langsa" }, 
+    { name: "Loker", slug: "loker" }, 
+    { name: "Zodiak", slug: "zodiak" }, ]
 
-const articles = [ { id: 1, title: "Perkembangan Teknologi AI di Indonesia Tahun 2024", excerpt: "AI semakin berkembang pesat di Indonesia...", category: "Teknologi", author: "Admin", date: "2024-01-15", image: "/placeholder.svg?height=300&width=500", }, { id: 2, title: "Tips Investasi Aman untuk Pemula", excerpt: "Cara memulai investasi dengan risiko rendah...", category: "Ekonomi", author: "Editor", date: "2024-01-12", image: "/placeholder.svg?height=300&width=500", }, ]
+const articles = [ 
+    {
+        id: 1, 
+        title: "Perkembangan Teknologi AI di Indonesia Tahun 2024",
+        excerpt: "AI semakin berkembang pesat di Indonesia...",
+        category: "Teknologi",
+        author: "Admin",
+        date: "2024-01-15",
+        image: "/placeholder.svg?height=300&width=500", }, 
+    {
+        id: 2,
+        title: "Tips Investasi Aman untuk Pemula",
+        excerpt: "Cara memulai investasi dengan risiko rendah...",
+        category: "Ekonomi",
+        author: "Editor",
+        date: "2024-01-12",
+        image: "/placeholder.svg?height=300&width=500",
+    }, 
+]
 
-export default function HomePage() { const [activeCategory, setActiveCategory] = useState<string | null>(null)
+export default function HomePage() {
+    const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
-return ( <div className="min-h-screen bg-white text-black"> {/* Header */} <header className="bg-white border-b sticky top-0 z-50"> <div className="container mx-auto px-4 py-4 flex items-center justify-between"> <Link href="/" className="flex items-center space-x-2"> <div className="relative w-10 h-8"> <Image src="/assets/logo.png" alt="LangsaPost" fill className="object-contain" /> </div> <span className="text-lg font-bold text-langsapost-600">LangsaPost</span> </Link> <Link href="/artikel" className="text-sm text-gray-600 hover:text-black"> Semua Artikel </Link> </div>
+    return ( <div className="min-h-screen bg-white text-black">
+        {/* Header */}
+        <header className="bg-white border-b sticky top-0 z-50">
+            <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                <Link href="/" className="flex items-center space-x-2">
+                    <div className="relative w-10 h-8">
+                        <Image src="/assets/logo.png" alt="LangsaPost" fill className="object-contain" />
+                    </div>
+                    <span className="text-lg font-bold text-langsapost-600">LangsaPost</span> 
+                </Link>
+                <Link href="/artikel" className="text-sm text-gray-600 hover:text-black">
+                    Semua Artikel 
+                </Link> 
+            </div>
 
 {/* Horizontal Kategori ala Kompas */}
     <div className="overflow-x-auto whitespace-nowrap border-t border-gray-200">
