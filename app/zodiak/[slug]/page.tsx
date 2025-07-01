@@ -1,15 +1,11 @@
+'use client'
+
 import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Heart, Zap, Shield, Copy, Share2 } from "lucide-react"
 import zodiakData from "@/data/zodiak.json"
-
-export async function generateStaticParams() {
-  return zodiakData.map((zodiak) => ({
-    slug: zodiak.name.toLowerCase()
-  }))
-}
 
 export default function ZodiakDetailPage({ params }: { params: { slug: string } }) {
   const slug = params.slug?.toLowerCase()
@@ -98,4 +94,4 @@ export default function ZodiakDetailPage({ params }: { params: { slug: string } 
       </Card>
     </div>
   )
-          }
+            }
