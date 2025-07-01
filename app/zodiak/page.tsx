@@ -75,8 +75,7 @@ export default function ZodiakPage() {
         {/* Zodiac Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {zodiacSigns.map((sign) => (
-            <Card
-              <Link href={`/zodiak/${sign.name.toLowerCase()}`} key={sign.name}>
+            <Link href={`/zodiak/${sign.name.toLowerCase()}`} key={sign.name}>
   <Card className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white/80 backdrop-blur-sm">
     <CardHeader className="text-center pb-4">
       <div className="text-4xl mb-2">{sign.icon}</div>
@@ -110,4 +109,4 @@ export default function ZodiakPage() {
       </div>
     </CardContent>
   </Card>
-</Link> 
+</Link>
