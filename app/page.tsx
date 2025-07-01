@@ -45,7 +45,6 @@ const articles = [
   },
 ]
 
-// Ambil 3 zodiak acak untuk "Zodiak Hari Ini"
 function getDailyZodiacs() {
   const today = new Date().toISOString().slice(0, 10)
   const seed = parseInt(today.replace(/-/g, ""), 10)
@@ -120,18 +119,18 @@ export default function HomePage() {
         </div>
 
         {/* Kategori */}
-        <div className="overflow-x-auto whitespace-nowrap border-t border-gray-200">
+        <div className="bg-black overflow-x-auto whitespace-nowrap">
           <div className="flex space-x-4 px-4 py-2">
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/kategori/${cat.slug}`}
                 onClick={() => setActiveCategory(cat.slug)}
-                className={`text-sm px-3 py-1 rounded-full ${
+                className={`text-sm text-white font-semibold border-b-2 ${
                   activeCategory === cat.slug
-                    ? "bg-langsapost-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                    ? "border-white"
+                    : "border-transparent hover:border-white"
+                } pb-1`}
               >
                 {cat.name}
               </Link>
@@ -256,4 +255,4 @@ export default function HomePage() {
       </footer>
     </div>
   )
-    }
+}
