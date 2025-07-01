@@ -1,97 +1,76 @@
-'use client'
-
 import { notFound } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Heart, Zap, Shield, Copy, Share2 } from "lucide-react"
-import zodiakData from "@/data/zodiak.json"
+import zodiacData from "@/data/zodiak.json"
+import { Calendar, HeartPulse, Star, Target } from "lucide-react"
+import Link from "next/link"
 
-export default function ZodiakDetailPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug?.toLowerCase()
-  const zodiak = zodiakData.find((z) => z.name.toLowerCase() === slug)
+const colorMap: Record<string, string> = {
+  Merah: "#ef4444",
+  Hijau: "#10b981",
+  Kuning: "#facc15",
+  Perak: "#9ca3af",
+  Emas: "#f59e0b",
+  "Biru Navy": "#1e3a8a",
+  Pink: "#ec4899",
+  Maroon: "#7f1d1d",
+  Ungu: "#8b5cf6",
+  Hitam: "#000000",
+  "Biru Elektrik": "#3b82f6",
+  "Biru Laut": "#0ea5e9",
+}
 
+export async function generateStaticParams() {
+  return zodiacData.map((z) => ({ slug: z.name }))
+}
+
+export default function ZodiakDetail({ params }: { params: { slug: string } }) {
+  const zodiak = zodiacData.find((z) => z.name === params.slug)
   if (!zodiak) return notFound()
 
-  const shareText = `Ramalan Zodiak ${zodiak.name} hari ini: ${zodiak.prediction}`
-  const hashtags = `#zodiak #${zodiak.name} #ramalanzodiak #langsapost`
-  const shareUrl = typeof window !== "undefined" ? window.location.href : ""
-
-  const copyToClipboard = (text: string) => {
-    if (typeof navigator !== "undefined") {
-      navigator.clipboard.writeText(text)
-    }
-  }
+  const bgColor = colorMap[zodiak.lucky] || "#4b5563" // default abu jika tidak ditemukan
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 px-4 py-10">
-      <Card className="max-w-2xl mx-auto bg-white/80 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <div className="text-5xl mb-2">{zodiak.icon}</div>
-          <CardTitle className="text-2xl font-bold text-gray-800">{zodiak.name}</CardTitle>
-          <p className="text-sm text-gray-500">{zodiak.date}</p>
-          <Badge variant="secondary" className="mt-2">{zodiak.element}</Badge>
-        </CardHeader>
+    <main className="min-h-screen flex items-center justify-center p-4">
+      <div
+        className="max-w-xl w-full rounded-2xl shadow-2xl text-white p-6 space-y-4"
+        style={{
+          background: `linear-gradient(135deg, ${bgColor}, #111827)`,
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <span>{zodiak.icon}</span> {zodiak.name.toUpperCase()}
+          </h1>
+          <span className="text-sm opacity-80">{zodiak.date}</span>
+        </div>
 
-        <CardContent className="space-y-6">
-          <p className="text-gray-700 leading-relaxed">{zodiak.prediction}</p>
+        <p className="text-sm">{zodiak.prediction}</p>
 
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Heart className="h-4 w-4 text-red-500" /> Cinta
-              </div>
-              <span>{zodiak.love}</span>
-            </div>
-
-            <div className="flex justify-between">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Zap className="h-4 w-4 text-yellow-500" /> Karir
-              </div>
-              <span>{zodiak.career}</span>
-            </div>
-
-            <div className="flex justify-between">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Shield className="h-4 w-4 text-green-500" /> Kesehatan
-              </div>
-              <span>{zodiak.health}</span>
-            </div>
-
-            <div className="flex justify-between pt-2 border-t border-gray-200">
-              <span className="text-sm text-gray-600">Warna Keberuntungan:</span>
-              <Badge variant="outline">{zodiak.lucky}</Badge>
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-sm">
+          <div className="flex items-center gap-2">
+            <HeartPulse className="w-4 h-4" />
+            <span>Kesehatan: {zodiak.health}</span>
           </div>
-
-          <div className="flex flex-wrap gap-3 pt-6 border-t border-gray-100">
-            <Button variant="outline" size="sm" onClick={() => copyToClipboard(shareText)}>
-              <Copy className="h-4 w-4 mr-2" /> Salin Teks
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => copyToClipboard(hashtags)}>
-              <Copy className="h-4 w-4 mr-2" /> Salin Hashtag
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() =>
-                window.open(`https://wa.me/?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`)
-              }
-            >
-              <Share2 className="h-4 w-4 mr-2" /> WhatsApp
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() =>
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`)
-              }
-            >
-              <Share2 className="h-4 w-4 mr-2" /> Facebook
-            </Button>
+          <div className="flex items-center gap-2">
+            <Target className="w-4 h-4" />
+            <span>Karier: {zodiak.career}</span>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4" />
+            <span>Asmara: {zodiak.love}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            <span>Warna Keberuntungan: {zodiak.lucky}</span>
+          </div>
+        </div>
+
+        <Link
+          href="/"
+          className="inline-block mt-4 text-sm underline text-white/80 hover:text-white"
+        >
+          ← Kembali ke Beranda
+        </Link>
+      </div>
+    </main>
   )
-            }
+        }
