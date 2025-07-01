@@ -1,6 +1,7 @@
 [
   {
     "name": "aries",
+    "slug": "aries",
     "icon": "🐏",
     "date": "21 Mar - 19 Apr",
     "element": "Api",
@@ -12,6 +13,7 @@
   },
   {
     "name": "taurus",
+    "slug": "taurus",
     "icon": "🐂",
     "date": "20 Apr - 20 Mei",
     "element": "Tanah",
@@ -23,6 +25,7 @@
   },
   {
     "name": "gemini",
+    "slug": "gemini",
     "icon": "👥",
     "date": "21 Mei - 20 Jun",
     "element": "Udara",
@@ -34,6 +37,7 @@
   },
   {
     "name": "cancer",
+    "slug": "cancer",
     "icon": "🦀",
     "date": "21 Jun - 22 Jul",
     "element": "Air",
@@ -45,6 +49,7 @@
   },
   {
     "name": "leo",
+    "slug": "leo",
     "icon": "🦁",
     "date": "23 Jul - 22 Agu",
     "element": "Api",
@@ -56,6 +61,7 @@
   },
   {
     "name": "virgo",
+    "slug": "virgo",
     "icon": "👩",
     "date": "23 Agu - 22 Sep",
     "element": "Tanah",
@@ -67,6 +73,7 @@
   },
   {
     "name": "libra",
+    "slug": "libra",
     "icon": "⚖️",
     "date": "23 Sep - 22 Okt",
     "element": "Udara",
@@ -78,6 +85,7 @@
   },
   {
     "name": "scorpio",
+    "slug": "scorpio",
     "icon": "🦂",
     "date": "23 Okt - 21 Nov",
     "element": "Air",
@@ -89,6 +97,7 @@
   },
   {
     "name": "sagittarius",
+    "slug": "sagittarius",
     "icon": "🏹",
     "date": "22 Nov - 21 Des",
     "element": "Api",
@@ -100,6 +109,7 @@
   },
   {
     "name": "capricorn",
+    "slug": "capricorn",
     "icon": "🐐",
     "date": "22 Des - 19 Jan",
     "element": "Tanah",
@@ -111,6 +121,7 @@
   },
   {
     "name": "aquarius",
+    "slug": "aquarius",
     "icon": "🏺",
     "date": "20 Jan - 18 Feb",
     "element": "Udara",
@@ -122,6 +133,7 @@
   },
   {
     "name": "pisces",
+    "slug": "pisces",
     "icon": "🐟",
     "date": "19 Feb - 20 Mar",
     "element": "Air",
@@ -131,4 +143,4 @@
     "health": "★★★☆☆",
     "lucky": "Biru Laut"
   }
-]
+    ]
