@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import data from '@/data/zodiak.json'
-import { FaFacebook, FaWhatsapp, FaLink, FaHashtag, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
+import { FaFacebook, FaWhatsapp, FaLink, FaHashtag, FaArrowLeft, FaArrowRight, FaHome } from 'react-icons/fa'
 
 const colorMap: Record<string, string> = {
   merah: 'bg-red-500',
@@ -17,6 +17,12 @@ const colorMap: Record<string, string> = {
   hitam: 'bg-black',
   'biru elektrik': 'bg-blue-500',
   'biru laut': 'bg-cyan-500'
+}
+
+const getFormattedDate = () => {
+  const now = new Date()
+  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' }
+  return now.toLocaleDateString('id-ID', options)
 }
 
 export default function ZodiakDetail() {
@@ -54,10 +60,17 @@ export default function ZodiakDetail() {
   return (
     <div className={`min-h-screen ${bgColor} text-white p-4`}>
       <div className="max-w-xl mx-auto space-y-4">
+        {/* Tanggal hari ini */}
+        <p className="text-center text-sm opacity-90">
+          Zodiak Hari Ini - <strong>{getFormattedDate()}</strong>
+        </p>
+
+        {/* Judul Zodiak */}
         <h1 className="text-3xl font-bold text-center">
           {z.icon} {z.name.toUpperCase()}
         </h1>
         <p className="text-center">{z.date} • Unsur: {z.element}</p>
+
         <p className="text-lg bg-white/20 p-4 rounded">{z.prediction}</p>
 
         <div className="grid grid-cols-3 gap-2 text-center text-sm">
@@ -84,15 +97,22 @@ export default function ZodiakDetail() {
           </div>
         </div>
 
-        <div className="flex justify-between mt-4 text-sm">
-          <button onClick={() => router.push(`/zodiak/${prev}`)} className="flex items-center gap-1 bg-white/30 px-3 py-1 rounded hover:opacity-80">
-            <FaArrowLeft /> {prev.toUpperCase()}
+        {/* Navigasi bawah */}
+        <div className="flex flex-col gap-2 mt-4 text-sm">
+          <button onClick={() => router.push('/')} className="flex items-center gap-1 justify-center bg-white/40 px-3 py-2 rounded hover:opacity-80">
+            <FaHome /> Kembali ke Homepage
           </button>
-          <button onClick={() => router.push(`/zodiak/${next}`)} className="flex items-center gap-1 bg-white/30 px-3 py-1 rounded hover:opacity-80">
-            {next.toUpperCase()} <FaArrowRight />
-          </button>
+
+          <div className="flex justify-between">
+            <button onClick={() => router.push(`/zodiak/${prev}`)} className="flex items-center gap-1 bg-white/30 px-3 py-1 rounded hover:opacity-80">
+              <FaArrowLeft /> {prev.toUpperCase()}
+            </button>
+            <button onClick={() => router.push(`/zodiak/${next}`)} className="flex items-center gap-1 bg-white/30 px-3 py-1 rounded hover:opacity-80">
+              {next.toUpperCase()} <FaArrowRight />
+            </button>
+          </div>
         </div>
       </div>
     </div>
   )
-    }
+      }
