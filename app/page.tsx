@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, User } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import zodiacData from "./data/zodiak.json"
+import zodiacData from "@/data/zodiak.json"
 
 const categories = [
   { name: "Politik", slug: "politik" },
@@ -199,7 +199,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 LangsaPost. Semua hak dilindungi.</p>
+            <p>&copy; 2025 LangsaPost. Semua hak dilindungi.</p>
           </div>
         </div>
       </footer>
