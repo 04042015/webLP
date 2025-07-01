@@ -1,25 +1,100 @@
 "use client"
 
-import { useState, useRef, useEffect, use } from "react" import { Badge } from "@/components/ui/badge" import { Card, CardContent } from "@/components/ui/card" import { Calendar, User, ArrowLeft, ArrowRight } from "lucide-react" import Image from "next/image" import Link from "next/link" import zodiacData from "@/data/zodiak.json" import { format } from "date-fns"
+import { useState, useRef, useEffect, use } from "react" 
+import { Badge } from "@/components/ui/badge" 
+import { Card, CardContent } from "@/components/ui/card" 
+import { Calendar, User, ArrowLeft, ArrowRight } from "lucide-react" 
+import Image from "next/image" import Link from "next/link" 
+import zodiacData from "@/data/zodiak.json" 
+import { format } from "date-fns"
 
-const categories = [ { name: "Politik", slug: "politik" }, { name: "Ekonomi", slug: "ekonomi" }, { name: "Olahraga", slug: "olahraga" }, { name: "Teknologi", slug: "teknologi" }, { name: "Internasional", slug: "internasional" }, { name: "Nasional", slug: "nasional" }, { name: "Hiburan", slug: "hiburan" }, { name: "Kesehatan", slug: "kesehatan" }, { name: "Pendidikan", slug: "pendidikan" }, { name: "Otomotif", slug: "otomotif" }, { name: "Langsa", slug: "langsa" }, { name: "Loker", slug: "loker" }, { name: "Zodiak", slug: "zodiak" }, ]
+const categories = [
+    { name: "Politik", slug: "politik" },
+    { name: "Ekonomi", slug: "ekonomi" },
+    { name: "Olahraga", slug: "olahraga" },
+    { name: "Teknologi", slug: "teknologi" },
+    { name: "Internasional", slug: "internasional" },
+    { name: "Nasional", slug: "nasional" },
+    { name: "Hiburan", slug: "hiburan" },
+    { name: "Kesehatan", slug: "kesehatan" },
+    { name: "Pendidikan", slug: "pendidikan" },
+    { name: "Otomotif", slug: "otomotif" },
+    { name: "Langsa", slug: "langsa" },
+    { name: "Loker", slug: "loker" },
+    { name: "Zodiak", slug: "zodiak" }, 
+]
 
-const articles = [ { id: 1, title: "Perkembangan Teknologi AI di Indonesia Tahun 2024", excerpt: "AI semakin berkembang pesat di Indonesia...", category: "Teknologi", author: "Admin", date: "2024-01-15", image: "/placeholder.svg?height=300&width=500", }, { id: 2, title: "Tips Investasi Aman untuk Pemula", excerpt: "Cara memulai investasi dengan risiko rendah...", category: "Ekonomi", author: "Editor", date: "2024-01-12", image: "/placeholder.svg?height=300&width=500", }, ]
+const articles = [ 
+  {
+    id: 1,
+    title: "Perkembangan Teknologi AI di Indonesia Tahun 2024", 
+    excerpt: "AI semakin berkembang pesat di Indonesia...", 
+    category: "Teknologi", 
+    author: "Admin", 
+    date: "2024-01-15", 
+    image: "/placeholder.svg?height=300&width=500", 
+  }, 
+  { 
+    id: 2, 
+    title: "Tips Investasi Aman untuk Pemula", 
+    excerpt: "Cara memulai investasi dengan risiko rendah...", 
+    category: "Ekonomi", 
+    author: "Editor", 
+    date: "2024-01-12", 
+    image: "/placeholder.svg?height=300&width=500", }, ]
 
-function getDailyZodiacs() { const today = new Date().toISOString().slice(0, 10) const seed = parseInt(today.replace(/-/g, ""), 10) const shuffled = [...zodiacData].sort((a, b) => { const hashA = (a.name.charCodeAt(0) * seed) % 100 const hashB = (b.name.charCodeAt(0) * seed) % 100 return hashA - hashB }) return shuffled.map((z, i) => ({ ...z, date: today })) }
+function getDailyZodiacs() {
+    const today = new Date().toISOString().slice(0, 10)
+    const seed = parseInt(today.replace(/-/g, ""), 10) 
+    const shuffled = [...zodiacData].sort((a, b) => {
+        const hashA = (a.name.charCodeAt(0) * seed) % 100 
+        const hashB = (b.name.charCodeAt(0) * seed) % 100 
+        return hashA - hashB 
+    }) 
+    return shuffled.map((z, i) => ({ ...z, date: today })) 
+ }
 
-function ZodiakSlider() { const scrollRef = useRef<HTMLDivElement>(null)
+function ZodiakSlider() { 
+    const scrollRef = useRef<HTMLDivElement>(null)
 
-const scroll = (dir: "left" | "right") => { if (scrollRef.current) { scrollRef.current.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" }) } }
+  const scroll = (dir: "left" | "right") => { 
+    if (scrollRef.current) {
+     scrollRef.current.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" }) 
+    } 
+  }
 
-return ( <div className="relative"> <button onClick={() => scroll("left")} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full" > <ArrowLeft className="w-5 h-5" /> </button> <div
+return ( 
+    <div className="relative">
+        <button
+            onClick={() => scroll("left")} 
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full" 
+        >
+            <ArrowLeft className="w-5 h-5" /> 
+        </button> 
+        <div
 ref={scrollRef}
 className="flex space-x-4 overflow-x-auto scrollbar-hide py-4 px-2"
 > {zodiacData.map((zodiak) => ( <Link key={zodiak.slug} href={/zodiak/${zodiak.slug}}> <Card className="min-w-[150px] hover:shadow-lg transition"> <CardContent className="p-4 text-center"> <div className="text-3xl">{zodiak.icon}</div> <div className="font-bold text-sm mt-1">{zodiak.name}</div> </CardContent> </Card> </Link> ))} </div> <button onClick={() => scroll("right")} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full" > <ArrowRight className="w-5 h-5" /> </button> </div> ) }
 
-export default function HomePage() { const [activeCategory, setActiveCategory] = useState<string | null>(null) const dailyZodiacs = getDailyZodiacs() const todayFormatted = format(new Date(), "dd MMMM yyyy")
+export default function HomePage() {
+  const [activeCategory, setActiveCategory] = useState<string | null>(null) 
+  const dailyZodiacs = getDailyZodiacs()  
+  const todayFormatted = format(new Date(), "dd MMMM yyyy")
 
-return ( <div className="min-h-screen bg-white text-black"> {/* Header */} <header className="bg-white border-b sticky top-0 z-50"> <div className="container mx-auto px-4 py-4 flex items-center justify-between"> <Link href="/" className="flex items-center space-x-2"> <div className="relative w-10 h-8"> <Image src="/assets/logo.png" alt="LangsaPost" fill className="object-contain" /> </div> <span className="text-lg font-bold text-langsapost-600">LangsaPost</span> </Link> <Link href="/artikel" className="text-sm text-gray-600 hover:text-black"> Semua Artikel </Link> </div>
+return (
+    <div className="min-h-screen bg-white text-black">
+      {/* Header */} 
+      <header className="bg-white border-b sticky top-0 z-50"> 
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between"> 
+          <Link href="/" className="flex items-center space-x-2"> 
+            <div className="relative w-10 h-8"> 
+              <Image src="/assets/logo.png" alt="LangsaPost" fill className="object-contain" /> 
+            </div> 
+            <span className="text-lg font-bold text-langsapost-600">LangsaPost</span> 
+          </Link> 
+          <Link href="/artikel" className="text-sm text-gray-600 hover:text-black"> Semua Artikel 
+          </Link>
+        </div>
 
 {/* Kategori */}
     <div className="bg-black overflow-x-auto whitespace-nowrap">
