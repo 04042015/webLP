@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar, User } from "lucide-react"
+import { Calendar, User, ArrowLeft, ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import zodiacData from "@/data/zodiak.json"
@@ -45,6 +45,7 @@ const articles = [
   },
 ]
 
+// Ambil 3 zodiak acak untuk "Zodiak Hari Ini"
 function getDailyZodiacs() {
   const today = new Date().toISOString().slice(0, 10)
   const seed = parseInt(today.replace(/-/g, ""), 10)
@@ -54,6 +55,48 @@ function getDailyZodiacs() {
     return hashA - hashB
   })
   return shuffled.slice(0, 3)
+}
+
+function ZodiakSlider() {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const scroll = (dir: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" })
+    }
+  }
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => scroll("left")}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </button>
+      <div
+        ref={scrollRef}
+        className="flex space-x-4 overflow-x-auto scrollbar-hide py-4 px-2"
+      >
+        {zodiacData.map((zodiak) => (
+          <Link key={zodiak.slug} href={`/zodiak/${zodiak.slug}`}>
+            <Card className="min-w-[150px] hover:shadow-lg transition">
+              <CardContent className="p-4 text-center">
+                <div className="text-3xl">{zodiak.icon}</div>
+                <div className="font-bold text-sm mt-1">{zodiak.name}</div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+      <button
+        onClick={() => scroll("right")}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full"
+      >
+        <ArrowRight className="w-5 h-5" />
+      </button>
+    </div>
+  )
 }
 
 export default function HomePage() {
@@ -97,8 +140,16 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Artikel */}
+      {/* Konten Utama */}
       <main className="container mx-auto px-4 py-6 space-y-6">
+
+        {/* SLIDER ZODIAK */}
+        <section>
+          <h2 className="text-xl font-bold text-langsapost-600 mb-2">🔮 Ramalan Zodiak Hari Ini</h2>
+          <ZodiakSlider />
+        </section>
+
+        {/* Artikel */}
         {articles.map((article) => (
           <Card key={article.id} className="overflow-hidden">
             <div className="relative h-48 md:h-64">
@@ -122,7 +173,7 @@ export default function HomePage() {
           </Card>
         ))}
 
-        {/* Zodiak Hari Ini */}
+        {/* Zodiak Hari Ini - Grid */}
         <section className="pt-6">
           <h2 className="text-xl font-bold mb-4 text-langsapost-600">Zodiak Hari Ini</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -205,4 +256,4 @@ export default function HomePage() {
       </footer>
     </div>
   )
-      }
+    }
