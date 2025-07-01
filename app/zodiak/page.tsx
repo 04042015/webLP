@@ -76,59 +76,38 @@ export default function ZodiakPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {zodiacSigns.map((sign) => (
             <Card
-              key={sign.name}
-              className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white/80 backdrop-blur-sm"
-            >
-              <CardHeader className="text-center pb-4">
-                <div className="text-4xl mb-2">{sign.icon}</div>
-                <CardTitle className="text-xl font-bold text-gray-800">{sign.name}</CardTitle>
-                <p className="text-sm text-gray-500">{sign.date}</p>
-                <Badge variant="secondary" className="w-fit mx-auto">
-                  {sign.element}
-                </Badge>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-gray-700 leading-relaxed">{sign.prediction}</p>
+              <Link href={`/zodiak/${sign.name.toLowerCase()}`} key={sign.name}>
+  <Card className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white/80 backdrop-blur-sm">
+    <CardHeader className="text-center pb-4">
+      <div className="text-4xl mb-2">{sign.icon}</div>
+      <CardTitle className="text-xl font-bold text-gray-800">{sign.name}</CardTitle>
+      <p className="text-sm text-gray-500">{sign.date}</p>
+      <Badge variant="secondary" className="w-fit mx-auto">{sign.element}</Badge>
+    </CardHeader>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Heart className="h-4 w-4 text-red-500" />
-                      <span className="text-sm font-medium">Cinta</span>
-                    </div>
-                    <span className="text-sm">{sign.love}</span>
-                  </div>
+    <CardContent className="space-y-4">
+      <p className="text-sm text-gray-700 leading-relaxed">{sign.prediction}</p>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Zap className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium">Karir</span>
-                    </div>
-                    <span className="text-sm">{sign.career}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Shield className="h-4 w-4 text-green-500" />
-                      <span className="text-sm font-medium">Kesehatan</span>
-                    </div>
-                    <span className="text-sm">{sign.health}</span>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-gray-100">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-600">Warna Keberuntungan:</span>
-                    <Badge variant="outline" className="text-xs">
-                      {sign.lucky}
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium">Cinta</h4>
+          <span className="text-sm">{sign.love}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium">Karier</h4>
+          <span className="text-sm">{sign.career}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium">Kesehatan</h4>
+          <span className="text-sm">{sign.health}</span>
+        </div>
+        <div className="pt-2 border-t border-gray-100">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-600">Warna Keberuntungan:</span>
+            <Badge variant="outline" className="text-xs">{sign.lucky}</Badge>
+          </div>
         </div>
       </div>
-    </div>
-  )
-   }
+    </CardContent>
+  </Card>
+</Link> 
