@@ -1,9 +1,9 @@
-import zodiakData from "@/data/zodiak.json"
 import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Heart, Zap, Shield, Copy, Share2 } from "lucide-react"
+import zodiakData from "@/data/zodiak.json"
 
 export default function ZodiakDetailPage({ params }: { params: { slug: string } }) {
   const slug = params.slug.toLowerCase()
@@ -39,18 +39,21 @@ export default function ZodiakDetailPage({ params }: { params: { slug: string } 
               </div>
               <span>{zodiak.love}</span>
             </div>
+
             <div className="flex justify-between">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Zap className="h-4 w-4 text-yellow-500" /> Karir
               </div>
               <span>{zodiak.career}</span>
             </div>
+
             <div className="flex justify-between">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Shield className="h-4 w-4 text-green-500" /> Kesehatan
               </div>
               <span>{zodiak.health}</span>
             </div>
+
             <div className="flex justify-between pt-2 border-t border-gray-200">
               <span className="text-sm text-gray-600">Warna Keberuntungan:</span>
               <Badge variant="outline">{zodiak.lucky}</Badge>
@@ -67,14 +70,18 @@ export default function ZodiakDetailPage({ params }: { params: { slug: string } 
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`)}
+              onClick={() =>
+                window.open(`https://wa.me/?text=${encodeURIComponent(shareText + "\n" + shareUrl)}`)
+              }
             >
               <Share2 className="h-4 w-4 mr-2" /> WhatsApp
             </Button>
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`)}
+              onClick={() =>
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`)
+              }
             >
               <Share2 className="h-4 w-4 mr-2" /> Facebook
             </Button>
@@ -83,4 +90,4 @@ export default function ZodiakDetailPage({ params }: { params: { slug: string } 
       </Card>
     </div>
   )
-                                 }
+              }
