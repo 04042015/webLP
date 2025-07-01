@@ -1,104 +1,109 @@
-'use client'
+import { notFound } from "next/navigation"
+import zodiacData from "@/data/zodiak.json"
+import Link from "next/link"
+import { Metadata } from "next"
+import { FaWhatsapp, FaFacebookF, FaLink, FaHashtag } from "react-icons/fa"
 
-import { useParams } from 'next/navigation'
-import zodiacData from '@/data/zodiak.json'
-import { useState } from 'react'
-import { FaFacebook, FaWhatsapp, FaHashtag, FaLink } from 'react-icons/fa'
+export const dynamicParams = false
 
-export default function ZodiakDetailPage() {
-  const { slug } = useParams()
-  const [copied, setCopied] = useState({ link: false, hashtag: false })
+export async function generateStaticParams() {
+  return zodiacData.map((zodiak) => ({ slug: zodiak.name }))
+}
 
-  const zodiak = zodiacData.find((z) => z.name.toLowerCase() === String(slug).toLowerCase())
-  const url = typeof window !== 'undefined' ? window.location.href : ''
-  const hashtag = `#${zodiak?.name} #ZodiakHarian #LangsaPost`
-
-  const copyToClipboard = (text: string, type: 'link' | 'hashtag') => {
-    navigator.clipboard.writeText(text)
-    setCopied((prev) => ({ ...prev, [type]: true }))
-    setTimeout(() => setCopied((prev) => ({ ...prev, [type]: false })), 2000)
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const zodiak = zodiacData.find((z) => z.name === params.slug)
+  if (!zodiak) return { title: "Zodiak tidak ditemukan" }
+  return {
+    title: `Ramalan ${zodiak.name} Hari Ini`,
+    description: zodiak.prediction,
   }
+}
 
-  const shareToWhatsApp = () => {
-    const message = `Zodiak hari ini untuk ${zodiak?.name}:\n${url}\n\n${hashtag}`
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')
+export default function ZodiakPage({ params }: { params: { slug: string } }) {
+  const zodiak = zodiacData.find((z) => z.name === params.slug)
+  if (!zodiak) return notFound()
+
+  const url = `https://langsapost.vercel.app/zodiak/${zodiak.name}`
+  const hashtag = `#${zodiak.name} #ZodiakHariIni #LangsaPost`
+
+  const zodiacOrder = [...zodiacData]
+  const currentIndex = zodiacOrder.findIndex(z => z.name === params.slug)
+  const prevZodiac = zodiacOrder[currentIndex - 1] || null
+  const nextZodiac = zodiacOrder[currentIndex + 1] || null
+
+  const cardColor: Record<string, string> = {
+    aries: "bg-red-100",
+    taurus: "bg-green-100",
+    gemini: "bg-yellow-100",
+    cancer: "bg-blue-100",
+    leo: "bg-orange-100",
+    virgo: "bg-emerald-100",
+    libra: "bg-pink-100",
+    scorpio: "bg-purple-100",
+    sagittarius: "bg-violet-100",
+    capricorn: "bg-gray-200",
+    aquarius: "bg-sky-100",
+    pisces: "bg-cyan-100",
   }
-
-  const shareToFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank')
-  }
-
-  if (!zodiak) return <div className="p-4">Zodiak tidak ditemukan.</div>
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
-      <div
-        className="rounded-2xl text-white p-6 space-y-4 shadow-md"
-        style={{ backgroundColor: getZodiacColor(zodiak.name) }}
-      >
-        <div className="text-5xl">{zodiak.icon}</div>
-        <h1 className="text-3xl font-bold capitalize">{zodiak.name}</h1>
-        <p className="text-sm italic">{zodiak.date} • Elemen: {zodiak.element}</p>
-        <hr className="opacity-30" />
+    <div className={`min-h-screen p-6 md:p-10 ${cardColor[zodiak.name] || "bg-gray-100"}`}>
+      <div className="max-w-2xl mx-auto rounded-xl shadow-lg p-6 bg-white space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="text-4xl">{zodiak.icon}</span>
+          <div>
+            <h1 className="text-2xl font-bold capitalize">{zodiak.name}</h1>
+            <div className="text-sm text-gray-500">{zodiak.date} — Unsur: {zodiak.element}</div>
+          </div>
+        </div>
+        <div className="space-y-2 text-gray-700 text-sm">
+          <p><strong>Umum:</strong> {zodiak.prediction}</p>
+          <p><strong>Cinta:</strong> {zodiak.love}</p>
+          <p><strong>Karier:</strong> {zodiak.career}</p>
+          <p><strong>Kesehatan:</strong> {zodiak.health}</p>
+          <p><strong>Warna Keberuntungan:</strong> {zodiak.lucky}</p>
+        </div>
 
-        <p className="text-base">{zodiak.prediction}</p>
-        <ul className="text-sm space-y-1">
-          <li>❤️ Cinta: {zodiak.love}</li>
-          <li>💼 Karier: {zodiak.career}</li>
-          <li>💪 Kesehatan: {zodiak.health}</li>
-          <li>🎨 Warna Keberuntungan: {zodiak.lucky}</li>
-        </ul>
-
-        <div className="pt-4">
-          <h2 className="font-semibold mb-2">Bagikan:</h2>
-          <div className="flex flex-wrap gap-2">
+        <div className="pt-4 border-t">
+          <h2 className="font-semibold mb-2">Bagikan Ramalan Ini:</h2>
+          <div className="flex gap-3">
+            <Link href={`https://wa.me/?text=${encodeURIComponent(url)}`} target="_blank" className="text-white bg-green-500 hover:bg-green-600 p-2 rounded-full">
+              <FaWhatsapp />
+            </Link>
+            <Link href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" className="text-white bg-blue-600 hover:bg-blue-700 p-2 rounded-full">
+              <FaFacebookF />
+            </Link>
             <button
-              onClick={shareToWhatsApp}
-              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm"
-            >
-              <FaWhatsapp /> WhatsApp
-            </button>
-            <button
-              onClick={shareToFacebook}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm"
-            >
-              <FaFacebook /> Facebook
-            </button>
-            <button
-              onClick={() => copyToClipboard(url, 'link')}
-              className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm"
+              onClick={() => navigator.clipboard.writeText(url)}
+              className="text-white bg-gray-500 hover:bg-gray-600 p-2 rounded-full"
             >
               <FaLink />
-              {copied.link ? 'Tersalin!' : 'Salin Link'}
             </button>
             <button
-              onClick={() => copyToClipboard(hashtag, 'hashtag')}
-              className="bg-purple-700 hover:bg-purple-800 text-white px-3 py-1 rounded-full flex items-center gap-2 text-sm"
+              onClick={() => navigator.clipboard.writeText(hashtag)}
+              className="text-white bg-purple-500 hover:bg-purple-600 p-2 rounded-full"
             >
               <FaHashtag />
-              {copied.hashtag ? 'Tersalin!' : 'Salin Hashtag'}
             </button>
           </div>
+        </div>
+
+        <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-between">
+          {prevZodiac && (
+            <Link href={`/zodiak/${prevZodiac.name}`} className="text-sm text-blue-600 hover:underline">
+              ← {prevZodiac.name}
+            </Link>
+          )}
+          <Link href="/" className="text-sm text-gray-600 hover:underline text-center sm:text-left">
+            ⬅️ Kembali ke Zodiak Hari Ini
+          </Link>
+          {nextZodiac && (
+            <Link href={`/zodiak/${nextZodiac.name}`} className="text-sm text-blue-600 hover:underline text-right">
+              {nextZodiac.name} →
+            </Link>
+          )}
         </div>
       </div>
     </div>
   )
-}
-
-function getZodiacColor(name: string) {
-  const colors: Record<string, string> = {
-    aries: '#ef4444', // merah
-    taurus: '#22c55e', // hijau
-    gemini: '#eab308', // kuning
-    cancer: '#3b82f6', // biru
-    leo: '#f97316', // oranye
-    virgo: '#8b5cf6', // ungu
-    libra: '#ec4899', // pink
-    scorpio: '#6b7280', // abu gelap
-    sagittarius: '#a855f7',
-    capricorn: '#4b5563',
-    aquarius: '#0ea5e9',
-    pisces: '#14b8a6',
-  }
-  return colors[name.toLowerCase()] || '#888888'
-              }
+    }
