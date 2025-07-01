@@ -5,8 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Heart, Zap, Shield, Copy, Share2 } from "lucide-react"
 import zodiakData from "@/data/zodiak.json"
 
+export async function generateStaticParams() {
+  return zodiakData.map((zodiak) => ({
+    slug: zodiak.name.toLowerCase()
+  }))
+}
+
 export default function ZodiakDetailPage({ params }: { params: { slug: string } }) {
-  const slug = params.slug.toLowerCase()
+  const slug = params.slug?.toLowerCase()
   const zodiak = zodiakData.find((z) => z.name.toLowerCase() === slug)
 
   if (!zodiak) return notFound()
@@ -16,7 +22,9 @@ export default function ZodiakDetailPage({ params }: { params: { slug: string } 
   const shareUrl = typeof window !== "undefined" ? window.location.href : ""
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
+    if (typeof navigator !== "undefined") {
+      navigator.clipboard.writeText(text)
+    }
   }
 
   return (
@@ -90,4 +98,4 @@ export default function ZodiakDetailPage({ params }: { params: { slug: string } 
       </Card>
     </div>
   )
-              }
+          }
