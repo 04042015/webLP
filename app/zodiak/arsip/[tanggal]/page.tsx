@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getZodiakByDate } from '@/lib/getZodiakByDate'
+import { getDynamicPrediction } from "@lib/getDynamicPrediction"
 
 export default async function ArsipZodiak({ params }: { params: { tanggal: string } }) {
   const { tanggal } = params
@@ -20,7 +21,8 @@ export default async function ArsipZodiak({ params }: { params: { tanggal: strin
         <div key={index} className="bg-white rounded-xl shadow p-4 my-4 border-l-4" style={{ borderColor: getColor(zodiak.name) }}>
           <h2 className="text-xl font-semibold">{zodiak.icon} {capitalize(zodiak.name)}</h2>
           <p className="text-sm text-gray-600">Unsur: {zodiak.element}</p>
-          <p className="mt-2">{zodiak.prediction}</p>
+          <p className="mt-2">{getDynamicPrediction(zodiak.name,tanggal)}
+          </p>
         </div>
       ))}
     </main>
