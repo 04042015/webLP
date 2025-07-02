@@ -15,7 +15,8 @@ const sampleTexts = [
 export function getDynamicPrediction(zodiak: string, dateStr?: string): string {
   const today = dateStr || format(new Date(), 'yyyy-MM-dd')
   const seed = Array.from(zodiak + today).reduce((acc, char) => acc + char.charCodeAt(0), 0) 
-  const index = seed % sampleTexts.length return sampleTexts[index] 
+  const index = seed % sampleTexts.length 
+  return sampleTexts[index] 
 }
 
                                                                                                                                                                    
