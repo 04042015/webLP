@@ -1,118 +1,72 @@
-'use client'
+import { notFound } from "next/navigation"
+import zodiacData from "@/data/zodiak.json"
+import { format } from "date-fns"
+import { getDynamicPrediction } from "@/lib/getDynamicPrediction"
 
-import { useParams, useRouter } from 'next/navigation'
-import data from '@/data/zodiak.json'
-import { FaFacebook, FaWhatsapp, FaLink, FaHashtag, FaArrowLeft, FaArrowRight, FaHome } from 'react-icons/fa'
-
-const colorMap: Record<string, string> = {
-  merah: 'bg-red-500',
-  hijau: 'bg-green-500',
-  kuning: 'bg-yellow-400',
-  perak: 'bg-gray-300',
-  emas: 'bg-yellow-600',
-  'biru navy': 'bg-blue-900',
-  pink: 'bg-pink-400',
-  maroon: 'bg-red-900',
-  ungu: 'bg-purple-600',
-  hitam: 'bg-black',
-  'biru elektrik': 'bg-blue-500',
-  'biru laut': 'bg-cyan-500'
+export async function generateStaticParams() {
+  return zodiacData.map((zodiak) => ({
+    slug: zodiak.slug,
+  }))
 }
 
-const getFormattedDate = () => {
-  const now = new Date()
-  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'long', year: 'numeric' }
-  return now.toLocaleDateString('id-ID', options)
-}
+export default function ZodiakPage({ params }: { params: { slug: string } }) {
+  const zodiak = zodiacData.find((z) => z.slug === params.slug)
+  if (!zodiak) return notFound()
 
-export default function ZodiakDetail() {
-  const params = useParams()
-  const router = useRouter()
-  const slug = params?.slug as string
+  const today = new Date()
+  const formattedDate = format(today, "yyyy-MM-dd")
+  const formattedDateDisplay = format(today, "dd MMMM yyyy")
 
-  const index = data.findIndex((z) => z.name === slug)
-  if (index === -1) return <div className="p-4">Zodiak tidak ditemukan.</div>
-
-  const z = data[index]
-  const prev = data[(index - 1 + data.length) % data.length].name
-  const next = data[(index + 1) % data.length].name
-
-  const luckyColor = z.lucky.toLowerCase()
-  const bgColor = colorMap[luckyColor] || 'bg-gray-200'
-
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : ''
-  const hashtags = `#${z.name} #zodiak #langsapost`
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text)
-    alert('Tersalin!')
-  }
-
-  const shareWhatsApp = () => {
-    const message = `Baca ramalan zodiak ${z.name.toUpperCase()} hari ini di LangsaPost!\n\n${currentUrl}`
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`)
-  }
-
-  const shareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`)
-  }
+  const prediction = getDynamicPrediction(zodiak.name, formattedDate)
 
   return (
-    <div className={`min-h-screen ${bgColor} text-white p-4`}>
-      <div className="max-w-xl mx-auto space-y-4">
-        {/* Tanggal hari ini */}
-        <p className="text-center text-sm opacity-90">
-          Zodiak Hari Ini - <strong>{getFormattedDate()}</strong>
-        </p>
+    <div className="min-h-screen bg-blue-900 text-white p-4">
+      <h1 className="text-center text-lg font-semibold">
+        Zodiak Hari Ini - {formattedDateDisplay}
+      </h1>
+      <div className="text-center text-4xl mt-2">{zodiak.icon} {zodiak.name.toUpperCase()}</div>
+      <p className="text-center text-sm mb-2">{zodiak.date_range} • Unsur: {zodiak.element}</p>
 
-        {/* Judul Zodiak */}
-        <h1 className="text-3xl font-bold text-center">
-          {z.icon} {z.name.toUpperCase()}
-        </h1>
-        <p className="text-center">{z.date} • Unsur: {z.element}</p>
+      <div className="bg-blue-800 p-4 rounded-lg mt-4 text-center text-lg">
+        {prediction}
+      </div>
 
-        <p className="text-lg bg-white/20 p-4 rounded">{z.prediction}</p>
-
-        <div className="grid grid-cols-3 gap-2 text-center text-sm">
-          <div className="bg-white/20 p-2 rounded">❤️ Cinta: {z.love}</div>
-          <div className="bg-white/20 p-2 rounded">💼 Karier: {z.career}</div>
-          <div className="bg-white/20 p-2 rounded">💪 Kesehatan: {z.health}</div>
+      <div className="grid grid-cols-3 gap-4 text-center mt-6">
+        <div>
+          <div>❤️ Cinta:</div>
+          <div>★★★★☆</div>
         </div>
-
-        <div className="bg-white/30 p-3 rounded flex flex-col gap-2">
-          <p className="text-sm">Warna Keberuntungan: <strong>{z.lucky}</strong></p>
-          <div className="flex flex-wrap gap-2 mt-2">
-            <button onClick={shareWhatsApp} className="flex items-center gap-1 bg-green-600 px-3 py-1 rounded hover:opacity-80 text-sm">
-              <FaWhatsapp /> WhatsApp
-            </button>
-            <button onClick={shareFacebook} className="flex items-center gap-1 bg-blue-600 px-3 py-1 rounded hover:opacity-80 text-sm">
-              <FaFacebook /> Facebook
-            </button>
-            <button onClick={() => copyToClipboard(currentUrl)} className="flex items-center gap-1 bg-gray-700 px-3 py-1 rounded hover:opacity-80 text-sm">
-              <FaLink /> Salin Link
-            </button>
-            <button onClick={() => copyToClipboard(hashtags)} className="flex items-center gap-1 bg-purple-700 px-3 py-1 rounded hover:opacity-80 text-sm">
-              <FaHashtag /> Salin Hashtag
-            </button>
-          </div>
+        <div>
+          <div>💼 Karier:</div>
+          <div>★★★★☆</div>
         </div>
-
-        {/* Navigasi bawah */}
-        <div className="flex flex-col gap-2 mt-4 text-sm">
-          <button onClick={() => router.push('/')} className="flex items-center gap-1 justify-center bg-white/40 px-3 py-2 rounded hover:opacity-80">
-            <FaHome /> Kembali ke Homepage
-          </button>
-
-          <div className="flex justify-between">
-            <button onClick={() => router.push(`/zodiak/${prev}`)} className="flex items-center gap-1 bg-white/30 px-3 py-1 rounded hover:opacity-80">
-              <FaArrowLeft /> {prev.toUpperCase()}
-            </button>
-            <button onClick={() => router.push(`/zodiak/${next}`)} className="flex items-center gap-1 bg-white/30 px-3 py-1 rounded hover:opacity-80">
-              {next.toUpperCase()} <FaArrowRight />
-            </button>
-          </div>
+        <div>
+          <div>💪 Kesehatan:</div>
+          <div>★★★★★</div>
         </div>
+      </div>
+
+      <div className="text-center mt-4">
+        <div>Warna Keberuntungan: <strong>Biru Navy</strong></div>
+      </div>
+
+      {/* Tombol share dan salin */}
+      <div className="flex flex-wrap justify-center gap-2 mt-6">
+        <a href={`https://wa.me/?text=${encodeURIComponent(prediction)}`} className="bg-green-500 px-3 py-1 rounded text-white">WhatsApp</a>
+        <a href={`https://www.facebook.com/sharer/sharer.php?u=https://langsapost.vercel.app/zodiak/${zodiak.slug}`} target="_blank" className="bg-blue-600 px-3 py-1 rounded text-white">Facebook</a>
+        <button
+          onClick={() => navigator.clipboard.writeText(`https://langsapost.vercel.app/zodiak/${zodiak.slug}`)}
+          className="bg-gray-700 px-3 py-1 rounded text-white"
+        >Salin Link</button>
+        <button
+          onClick={() => navigator.clipboard.writeText(`#${zodiak.name.toLowerCase()} #zodiak #ramalanzodiak`)}
+          className="bg-purple-600 px-3 py-1 rounded text-white"
+        >Salin Hashtag</button>
+      </div>
+
+      <div className="mt-6 text-center">
+        <a href="/" className="bg-white text-blue-800 px-4 py-2 rounded">🏠 Kembali ke Homepage</a>
       </div>
     </div>
   )
-      }
+}
