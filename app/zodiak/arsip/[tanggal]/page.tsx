@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getZodiakByDate } from '@/lib/getZodiakByDate'
-import { getDynamicPrediction } from "@lib/getDynamicPrediction"
+import { getDynamicPrediction } from "@/lib/getDynamicPrediction"
 
 export default async function ArsipZodiak({ params }: { params: { tanggal: string } }) {
   const { tanggal } = params
