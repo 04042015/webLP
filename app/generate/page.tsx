@@ -36,7 +36,7 @@ export default function GeneratePage() {
       setMessage("✅ Berhasil generate artikel!");
     } catch (err: any) {
       console.error(err);
-      setMessage("❌ Gagal: " + err.message);
+      setMessage("❌ Gagal: " + JSON.stringify(error));
     } finally {
       setLoading(false);
     }
