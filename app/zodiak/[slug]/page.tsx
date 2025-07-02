@@ -1,9 +1,8 @@
-'use client'
-
 import { notFound } from "next/navigation"
 import zodiacData from "@/data/zodiak.json"
 import { format } from "date-fns"
 import { getDynamicPrediction } from "@/lib/getDynamicPrediction"
+import ZodiakShareButtons from "@/components/ZodiakShareButtons"
 
 export async function generateStaticParams() {
   return zodiacData.map((zodiak) => ({
@@ -52,23 +51,12 @@ export default function ZodiakPage({ params }: { params: { slug: string } }) {
         <div>Warna Keberuntungan: <strong>Biru Navy</strong></div>
       </div>
 
-      {/* Tombol share dan salin */}
-      <div className="flex flex-wrap justify-center gap-2 mt-6">
-        <a href={`https://wa.me/?text=${encodeURIComponent(prediction)}`} className="bg-green-500 px-3 py-1 rounded text-white">WhatsApp</a>
-        <a href={`https://www.facebook.com/sharer/sharer.php?u=https://langsapost.vercel.app/zodiak/${zodiak.slug}`} target="_blank" className="bg-blue-600 px-3 py-1 rounded text-white">Facebook</a>
-        <button
-          onClick={() => navigator.clipboard.writeText(`https://langsapost.vercel.app/zodiak/${zodiak.slug}`)}
-          className="bg-gray-700 px-3 py-1 rounded text-white"
-        >Salin Link</button>
-        <button
-          onClick={() => navigator.clipboard.writeText(`#${zodiak.name.toLowerCase()} #zodiak #ramalanzodiak`)}
-          className="bg-purple-600 px-3 py-1 rounded text-white"
-        >Salin Hashtag</button>
-      </div>
+      {/* Import tombol share */}
+      <ZodiakShareButtons prediction={prediction} slug={zodiak.slug} name={zodiak.name} />
 
       <div className="mt-6 text-center">
         <a href="/" className="bg-white text-blue-800 px-4 py-2 rounded">🏠 Kembali ke Homepage</a>
       </div>
     </div>
   )
-}
+      }
