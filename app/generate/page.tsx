@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 
 export default function GeneratePage() {
   const [title, setTitle] = useState("");
@@ -16,24 +15,28 @@ export default function GeneratePage() {
     setMessage("");
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-article", {
-        body: {
+      const res = await fetch("/api/generate-article", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           title,
           category,
           author,
-        },
+        }),
       });
 
-      if (error) {
-        console.error(error);
-        setMessage("❌ Gagal: " + error.message);
-      } else {
-        console.log(data);
-        setMessage("✅ Berhasil generate artikel!");
+      const result = await res.json();
+
+      if (!res.ok || !result.success) {
+        throw new Error(result.error || "Gagal generate artikel");
       }
+
+      setMessage("✅ Berhasil generate artikel!");
     } catch (err: any) {
       console.error(err);
-      setMessage("❌ Terjadi kesalahan: " + err.message);
+      setMessage("❌ Gagal: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -41,7 +44,7 @@ export default function GeneratePage() {
 
   return (
     <div className="max-w-lg mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Generate Artikel Otomatis</h1>
+      <h1 className="text-2xl font-bold mb-4">📝 Generate Artikel Otomatis</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">Judul</label>
@@ -83,10 +86,10 @@ export default function GeneratePage() {
       </form>
 
       {message && (
-        <div className="mt-4 p-2 border rounded bg-gray-100">
+        <div className="mt-4 p-2 border rounded bg-gray-100 text-sm">
           {message}
         </div>
       )}
     </div>
   );
-}
+                        }
