@@ -191,7 +191,7 @@ return (
                 </div>
               </div>
               <p className="text-sm text-gray-600">
-                  {getDynamicPrediction(zodiak name).slice(0, 100)}...
+                  {getDynamicPrediction(zodiak.name).slice(0, 100)}...
               </p>
               <Link href={`/zodiak/${zodiak.slug}`} className="text-sm text-blue-600 hover:underline">
                 Baca Selengkapnya →
