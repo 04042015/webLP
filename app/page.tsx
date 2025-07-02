@@ -55,47 +55,49 @@ function getDailyZodiacs() {
     return shuffled.map((z, i) => ({ ...z, date: today })) 
  }
 
-function ZodiakSlider() { 
-    const scrollRef = useRef<HTMLDivElement>(null)
+function ZodiakSlider() {
+  const scrollRef = useRef<HTMLDivElement>(null)
 
-  const scroll = (dir: "left" | "right") => { 
+  const scroll = (dir: "left" | "right") => {
     if (scrollRef.current) {
-     scrollRef.current.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" }) 
-    } 
+      scrollRef.current.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" })
+    }
   }
 
-return ( 
+  return (
     <div className="relative">
-        <button
-            onClick={() => scroll("left")} 
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full" 
-        >
-            <ArrowLeft className="w-5 h-5" /> 
-        </button> 
-        <div
-          ref={scrollRef}
-          className="flex space-x-4 overflow-x-auto scrollbar-hide py-4 px-2"
-        >
-    {zodiacData.map((zodiak) => (
-      <Link key={zodiak.slug} href={/zodiak/${zodiak.slug}}> 
-        <Card className="min-w-[150px] hover:shadow-lg transition"> 
-          <CardContent className="p-4 text-center"> 
-            <div className="text-3xl">{zodiak.icon}</div> 
-            <div className="font-bold text-sm mt-1">{zodiak.name}</div> 
-          </CardContent> 
-        </Card> 
-      </Link> 
-    ))} 
-  </div> 
-  <button
-    onClick={() => scroll("right")} 
-    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full" 
-  > 
-     <ArrowRight className="w-5 h-5" /> 
-   </button> 
- </div>
- ) 
-}
+      <button
+        onClick={() => scroll("left")}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full"
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </button>
+
+      <div
+        ref={scrollRef}
+        className="flex space-x-4 overflow-x-auto scrollbar-hide py-4 px-2"
+      >
+        {zodiacData.map((zodiak) => (
+          <Link key={zodiak.slug} href={`/zodiak/${zodiak.slug}`}>
+            <Card className="min-w-[150px] hover:shadow-lg transition">
+              <CardContent className="p-4 text-center">
+                <div className="text-3xl">{zodiak.icon}</div>
+                <div className="font-bold text-sm mt-1">{zodiak.name}</div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+
+      <button
+        onClick={() => scroll("right")}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow p-1 rounded-full"
+      >
+        <ArrowRight className="w-5 h-5" />
+      </button>
+    </div>
+  )
+                                           }
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null) 
