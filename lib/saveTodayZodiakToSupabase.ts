@@ -1,28 +1,43 @@
-import { format } from 'date-fns'
-import zodiakData from '@/data/zodiak.json'
-import { supabase } from './supabaseClient-prod'
+import { createClient } from "@supabase/supabase-js";
+import { format } from "date-fns";
+import zodiakData from "@/data/zodiak.json";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export async function saveTodayZodiakToSupabase() {
-  const today = format(new Date(), 'yyyy-MM-dd')
+  const today = format(new Date(), "yyyy-MM-dd");
 
-  // Cek apakah data untuk hari ini sudah ada
-  const { data: existing, error: readError } = await supabase
-    .from('zodiak_arsip')
-    .select('*')
-    .eq('tanggal', today)
-    .single()
+  // Cek apakah data hari ini sudah ada
+  const { data: existing, error: checkError } = await supabase
+    .from("zodiak_arsip")
+    .select("id")
+    .eq("date", today)
+    .limit(1)
+    .maybeSingle();
 
-  if (existing) return console.log('Sudah ada arsip zodiak untuk hari ini.')
-  if (readError && readError.code !== 'PGRST116') throw readError
+  if (checkError) {
+    console.error("Gagal cek arsip:", checkError.message);
+    return;
+  }
 
-  // Simpan data
-  const { error } = await supabase.from('zodiak_arsip').insert([
+  if (existing) {
+    console.log("Zodiak hari ini sudah ada di Supabase.");
+    return;
+  }
+
+  const { error } = await supabase.from("zodiak_arsip").insert([
     {
-      tanggal: today,
-      data: zodiakData,
+      date: today,
+      zodiak: zodiakData,
     },
-  ])
+  ]);
 
-  if (error) throw error
-  console.log('Zodiak hari ini berhasil disimpan ke Supabase')
+  if (error) {
+    console.error("Gagal simpan zodiak hari ini:", error.message);
+  } else {
+    console.log("Zodiak hari ini berhasil disimpan.");
+  }
 }
