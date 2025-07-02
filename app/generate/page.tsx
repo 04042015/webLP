@@ -1,96 +1,99 @@
 "use client"
 
 import { useState } from "react"
+import { articleService } from "@/lib/supabase"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner"
 
 export default function GenerateArticlePage() {
-  const [title, setTitle] = useState("")
-  const [category, setCategory] = useState("")
-  const [author, setAuthor] = useState("")
   const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [form, setForm] = useState({
+    title: "",
+    slug: "",
+    category: "",
+    author: "",
+    content: "",
+  })
 
-  const handleGenerate = async () => {
-    if (!title || !category || !author) {
-      setMessage("❗ Mohon isi semua field")
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.title || !form.slug || !form.category || !form.author || !form.content) {
+      toast.error("Semua field wajib diisi!")
       return
     }
 
     setLoading(true)
-    setMessage(null)
-
     try {
-      const res = await fetch("/api/generate-article", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, category, author })
+      await articleService.createArticle({
+        title: form.title,
+        slug: form.slug,
+        category: form.category,
+        author: form.author,
+        content: form.content,
+        status: "published",
+        featured: false,
       })
-
-      const data = await res.json()
-      if (res.ok) {
-        setMessage(`✅ Artikel berhasil dibuat: ${data.slug}`)
-      } else {
-        setMessage(`❌ Gagal: ${data.error || "Terjadi kesalahan"}`)
-      }
+      toast.success("Artikel berhasil dibuat!")
+      setForm({
+        title: "",
+        slug: "",
+        category: "",
+        author: "",
+        content: "",
+      })
     } catch (err) {
       console.error(err)
-      setMessage("❌ Error saat mengirim request")
+      toast.error("Gagal membuat artikel. Coba lagi.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-6 rounded shadow max-w-md w-full">
-        <h1 className="text-lg font-bold mb-4 text-center">📝 Generate Artikel Otomatis</h1>
-
-        <div className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium mb-1">Judul</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Masukkan judul artikel"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Kategori</label>
-            <input
-              type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Masukkan kategori (misal: Teknologi)"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Author</label>
-            <input
-              type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Masukkan nama author"
-            />
-          </div>
-
-          <button
-            onClick={handleGenerate}
-            disabled={loading}
-            className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? "Mengirim..." : "Generate Artikel"}
-          </button>
-
-          {message && (
-            <div className="mt-3 text-center text-sm">{message}</div>
-          )}
-        </div>
-      </div>
+    <div className="max-w-lg mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-4">🚀 Generate Artikel Baru</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          name="title"
+          placeholder="Judul Artikel"
+          value={form.title}
+          onChange={handleChange}
+        />
+        <Input
+          name="slug"
+          placeholder="Slug (tanpa spasi, gunakan tanda -)"
+          value={form.slug}
+          onChange={handleChange}
+        />
+        <Input
+          name="category"
+          placeholder="Kategori"
+          value={form.category}
+          onChange={handleChange}
+        />
+        <Input
+          name="author"
+          placeholder="Penulis"
+          value={form.author}
+          onChange={handleChange}
+        />
+        <Textarea
+          name="content"
+          placeholder="Konten artikel (boleh HTML)"
+          value={form.content}
+          onChange={handleChange}
+          rows={6}
+        />
+        <Button type="submit" disabled={loading} className="w-full">
+          {loading ? "Menyimpan..." : "Generate Artikel"}
+        </Button>
+      </form>
     </div>
   )
 }
