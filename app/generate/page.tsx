@@ -17,7 +17,7 @@ export default function GeneratePage() {
     setArticle(null);
 
     try {
-      const res = await fetch("https://<PROJECT-ID>.functions.supabase.co/generate-article", {
+      const res = await fetch("https://batyohvfirsxgduloyvq.supabase.co/functions/v1/dynamic-endpoint", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
