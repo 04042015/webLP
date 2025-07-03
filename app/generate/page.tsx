@@ -5,46 +5,47 @@ import { useState } from "react";
 export default function GeneratePage() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [author, setAuthor] = useState("");
+  const [author, setAuthor] = useState("LangsaPost AI");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [article, setArticle] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+    setArticle(null);
 
     try {
-      const res = await fetch("/api/generate-article", {
+      const res = await fetch("https://<PROJECT-ID>.functions.supabase.co/generate-article", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title,
-          category,
-          author,
-        }),
+        body: JSON.stringify({ title, category, author }),
       });
 
       const result = await res.json();
 
-      if (!res.ok || !result.success) {
+      if (!res.ok || result.error) {
+        console.error("Error:", result);
         throw new Error(result.error || "Gagal generate artikel");
       }
 
-      setMessage("✅ Berhasil generate artikel!");
+      setArticle(result);
+      setMessage("✅ Artikel berhasil dibuat!");
     } catch (err: any) {
       console.error(err);
-      setMessage("❌ Gagal: " + JSON.stringify(error));
+      setMessage("❌ Gagal: " + err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
+    <div className="max-w-xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">📝 Generate Artikel Otomatis</h1>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">Judul</label>
@@ -56,18 +57,27 @@ export default function GeneratePage() {
             required
           />
         </div>
+
         <div>
           <label className="block mb-1 font-medium">Kategori</label>
-          <input
-            type="text"
+          <select
             className="w-full border rounded p-2"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
-          />
+          >
+            <option value="">-- Pilih Kategori --</option>
+            <option value="nasional">Nasional</option>
+            <option value="internasional">Internasional</option>
+            <option value="healthy">Healthy</option>
+            <option value="sport">Sport</option>
+            <option value="zodiak">Zodiak</option>
+            <option value="loker">Loker</option>
+          </select>
         </div>
+
         <div>
-          <label className="block mb-1 font-medium">Author</label>
+          <label className="block mb-1 font-medium">Penulis</label>
           <input
             type="text"
             className="w-full border rounded p-2"
@@ -76,20 +86,31 @@ export default function GeneratePage() {
             required
           />
         </div>
+
         <button
           type="submit"
           disabled={loading}
           className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
         >
-          {loading ? "Generating..." : "Generate Artikel"}
+          {loading ? "Mengirim..." : "Generate Artikel"}
         </button>
       </form>
 
       {message && (
-        <div className="mt-4 p-2 border rounded bg-gray-100 text-sm">
+        <div className="mt-4 p-3 border rounded bg-gray-100 text-sm text-gray-700">
           {message}
+        </div>
+      )}
+
+      {article && (
+        <div className="mt-6 p-4 border rounded bg-white shadow">
+          <h2 className="text-xl font-semibold">{article.title}</h2>
+          <p className="text-sm text-gray-500 mb-2">
+            {article.category} • oleh {article.author}
+          </p>
+          <div className="whitespace-pre-line">{article.content}</div>
         </div>
       )}
     </div>
   );
-                        }
+}
