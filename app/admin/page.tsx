@@ -13,9 +13,20 @@ import { articleService, localStorageService, type Article } from "@/lib/supabas
 import Link from "next/link"
 import { useAuth } from "@/components/auth/admin-auth"
 
-const allCategories = [
-  "Politik", "Ekonomi", "Olahraga", "Teknologi", "Internasional", "Nasional",
-  "Hiburan", "Kesehatan", "Pendidikan", "Otomotif", "Langsa", "Loker", "Zodiak"
+const CATEGORY_OPTIONS = [
+  "Politik",
+  "Ekonomi",
+  "Olahraga",
+  "Teknologi",
+  "Internasional",
+  "Nasional",
+  "Hiburan",
+  "Kesehatan",
+  "Pendidikan",
+  "Otomotif",
+  "Langsa",
+  "Loker",
+  "Zodiak",
 ]
     title: "Total Artikel",
     value: "0",
