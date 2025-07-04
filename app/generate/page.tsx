@@ -67,12 +67,19 @@ export default function GeneratePage() {
             required
           >
             <option value="">-- Pilih Kategori --</option>
-            <option value="nasional">Nasional</option>
-            <option value="internasional">Internasional</option>
-            <option value="healthy">Healthy</option>
-            <option value="sport">Sport</option>
-            <option value="zodiak">Zodiak</option>
-            <option value="loker">Loker</option>
+            <option value="Politik">Politik</option>
+            <option value="Ekonomi">Ekonomi</option>
+            <option value="Olahraga">Olahraga</option>
+            <option value="Teknologi">Teknologi</option>
+            <option value="Internasional">Internasional</option>
+            <option value="Nasional">Nasional</option>
+            <option value="Hiburan">Hiburan</option>
+            <option value="Kesehatan">Kesehatan</option>
+            <option value="Pendidikan">Pendidikan</option>
+            <option value="Otomotif">Otomotif</option>
+            <option value="Langsa">Langsa</option>
+            <option value="Loker">Loker</option>
+            <option value="Zodiak">Zodiak</option>
           </select>
         </div>
 
