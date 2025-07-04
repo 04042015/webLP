@@ -28,6 +28,8 @@ const CATEGORY_OPTIONS = [
   "Loker",
   "Zodiak",
 ]
+const stats = [
+  {
     title: "Total Artikel",
     value: "0",
     change: "+12%",
