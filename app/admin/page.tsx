@@ -13,8 +13,10 @@ import { articleService, localStorageService, type Article } from "@/lib/supabas
 import Link from "next/link"
 import { useAuth } from "@/components/auth/admin-auth"
 
-const stats = [
-  {
+const allCategories = [
+  "Politik", "Ekonomi", "Olahraga", "Teknologi", "Internasional", "Nasional",
+  "Hiburan", "Kesehatan", "Pendidikan", "Otomotif", "Langsa", "Loker", "Zodiak"
+]
     title: "Total Artikel",
     value: "0",
     change: "+12%",
@@ -234,16 +236,25 @@ export default function AdminPage() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Kategori</label>
                   <select
-                    value={formData.category}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                    className="w-full p-2 border rounded"
-                  >
-                    <option value="Teknologi">Teknologi</option>
-                    <option value="Keuangan">Keuangan</option>
-                    <option value="Zodiak">Zodiak</option>
-                    <option value="Lifestyle">Lifestyle</option>
-                    <option value="Berita">Berita</option>
-                  </select>
+  value={formData.category}
+  onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+  className="w-full p-2 border rounded"
+>
+  <option value="Politik">Politik</option>
+  <option value="Ekonomi">Ekonomi</option>
+  <option value="Olahraga">Olahraga</option>
+  <option value="Teknologi">Teknologi</option>
+  <option value="Internasional">Internasional</option>
+  <option value="Nasional">Nasional</option>
+  <option value="Hiburan">Hiburan</option>
+  <option value="Kesehatan">Kesehatan</option>
+  <option value="Pendidikan">Pendidikan</option>
+  <option value="Otomotif">Otomotif</option>
+  <option value="Langsa">Langsa</option>
+  <option value="Loker">Loker</option>
+  <option value="Zodiak">Zodiak</option>
+</select>
+
                 </div>
 
                 <div>
